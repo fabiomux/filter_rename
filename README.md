@@ -12,10 +12,10 @@ in _targets_ like:
 
 Considering the file `/home/fabio/Documents/Ruby/filter_rename/Gemfile.lock` we have:
 
-- <path>: */home/fabio/Documents/Ruby*
-- <folder>: *filter_rename*
-- <name>: *Gemfile*
-- <ext>: *.lock*
+- path: */home/fabio/Documents/Ruby*
+- folder: *filter_rename*
+- name: *Gemfile*
+- ext: *.lock*
 
 The chain of filters will be applied to the current _target_ which can be selected using the *--select*
 option, the default target is _name_.
