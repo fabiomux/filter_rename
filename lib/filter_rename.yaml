@@ -1,0 +1,165 @@
+---
+:global:
+  :hash_type: :none
+  :date_format: '%Y-%m-%d'
+  :counter_length: 3
+  :counter_start: 0
+  :targets: :short
+  :pdf_metadata: false
+  :image_metadata: false
+:filter:
+  :lang: :en
+  :word_separator: " "
+  :target: :name
+  :ignore_case: true
+  :grep: '.*'
+  :grep_on: :source
+  :grep_exclude: false
+  # full_filename, :full_path, :filename, <target>
+  :grep_target: :full_filename
+:words:
+  :shortcut:
+    :short: ['Vol', 'Num']
+    :long: ['Volume', 'Number']
+  :general:
+    :en: ['Hello']
+    :it: ['Ciao']
+    :fr: ['Salut']
+    :es: ['Hola']
+    :pt: ['Olá']
+  :short_months:
+    :en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    :it: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic']
+    :fr: ['Janv', 'Févr', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil', 'Août|Aout', 'Sept', 'Oct', 'Nov', 'Déc|Dec']
+    :es: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+    :pt: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+    :de: ['Jan', 'Feb', 'Mär|Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
+    :hr: ['Sij', 'Vel', 'Ožu|Ozu', 'Tra', 'Svi', 'Lip', 'Srp', 'Kol', 'Ruj', 'Lis', 'Stu', 'Pro']
+  :long_months:
+    :en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    :it: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre']
+    :fr: ['Janvier', 'Février|Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août|Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre|Decembre']
+    :es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+    :pt: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    :de: ['Januar[^y]', 'Februar[^y]', 'März|Marz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+    :hr: ['Siječanj|Sijecanj', 'Veljača|Veljaca', 'Ožujak|Ozujak', 'Travanj', 'Svibanj', 'Lipanj', 'Srpanj', 'Kolovoz', 'Rujan', 'Listopad', 'Studeni', 'Prosinac']
+  :short_days:
+    :en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    :it: ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom']
+    :fr: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
+    :es: ['Lun', 'Mar', 'Mié|Mie', 'Jue', 'Vie', 'Sáb|Sab', 'Dom']
+    :pt: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb|Sab', 'Dom']
+    :de: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
+    :hr: ['Pon', 'Uto', 'Sri', 'čet|cet', 'Pet', 'Sub', 'Ned']
+  :long_days:
+    :en: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    :it: ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica']
+    :fr: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+    :es: ['Lunes', 'Martes', 'Miércoles|Miercoles', 'Jueves', 'Viernes', 'Sábado|Sabado', 'Domingo']
+    :pt: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado|Sabado', 'Domingo']
+    :de: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
+    :hr: ['Ponedjeljak', 'Utorak', 'Srijeda', 'četvrtak|Cetvrtak', 'Petak', 'Subota', 'Nedjelja']
+
+:macro:
+  humanize:
+    -
+      :spacify:
+      - '_'
+      - "\\."
+    -
+      :squeeze:
+      - ' '
+    -
+      :translate_words:
+      - :long_months
+      - :it
+      - :en
+    -
+      :translate_words:
+      - :long_months
+      - :es
+      - :en
+    -
+      :translate_words:
+      - :long_months
+      - :fr
+      - :en
+    -
+      :translate_words:
+      - :long_months
+      - :de
+      - :en
+    -
+      :translate_words:
+      - :long_months
+      - :hr
+      - :en
+    -
+      :translate_words:
+      - :long_months
+      - :pt
+      - :en
+    -
+      :replace_date:
+      - '<B> <Y>'
+      - '<Y>-<m>'
+    -
+      :replace:
+      - ' ,[ ]*'
+      - ', '
+    -
+      :replace:
+      - '([a-z]) - ([0-9])'
+      - '\1 \2'
+  append_issue:
+    :move_to:
+    - '(Issue|Volume) ([0-9]+)'
+    - 'tmp'
+    :template:
+    - '<name> #<tmp>'
+    :delete:
+    - ' #$'
+    :squeeze:
+    - ' '
+  file_to_id3:
+    -
+      :copy_to:
+      - "([^-]+) -"
+      - "artist"
+    -
+      :copy_to:
+      - "- ([^-]+)"
+      - "title"
+  id3_to_file:
+    :template:
+    - "<artist> - <title>"
+  remove_id3_comments:
+    :select:
+    - "comments"
+    :set:
+    - ''
+  camels_to_words:
+    -
+      :config:
+      - ignore_case:false
+    -
+      :replace:
+      - "([A-Z])([a-z!']+)"
+      - " \\1\\2 "
+    -
+      :replace:
+      - '\( +'
+      - '('
+    -
+      :replace:
+      - ' +\)'
+      - ')'
+    -
+      :squeeze:
+      - " "
+    -
+      :trim: []
+  remove_dash_separator:
+    :replace:
+    - '([a-z]) - ([0-9])'
+    - '\1 \2'
