@@ -562,7 +562,7 @@ module FilterRename
       def self.hint; 'Swap the NTH1 word with the NTH2'; end
       def self.params; 'NTH1,NTH2'; end
 
-      def indexed_words; 2; end
+      def indexed_params; 2; end
 
       def filtered_word(word, params, param_num)
         case param_num
@@ -643,7 +643,7 @@ module FilterRename
       def self.hint; 'Wrap the words between the NTH1 and the NTH2 with SEPARATOR1 and SEPARATOR2'; end
       def self.params; 'NTH1,NTH2,SEPARATOR1,SEPARATOR2'; end
 
-      def indexed_words; 2; end
+      def indexed_params; 2; end
 
       def filtered_word(word, params, param_num)
         case param_num
