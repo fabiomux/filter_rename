@@ -168,13 +168,13 @@ module FilterRename
     end
 
 
-    class CopyTo < FilterBase
+    class CopyTo < FilterRegExp
       def self.hint; 'Copy the text selected by REGEX to TARGET'; end
       def self.params; 'REGEX,TARGET'; end
 
-      def filter(params)
-        set_string(get_string.scan(Regexp.new(wrap_regex(params[0]), get_config(:ignore_case).to_boolean)).pop.to_a.pop, params[1])
-        super get_string
+      def filtered_regexp(str, params)
+        set_string(str, params[1])
+        str
       end
     end
 
@@ -198,14 +198,12 @@ module FilterRename
     end
 
 
-    class Delete < FilterBase
+    class Delete < FilterRegExp
       def self.hint; 'Remove the text matching REGEX'; end
-      def self.params; 'REGEX1[,REGEX2,...]'; end
+      def self.params; 'REGEX'; end
 
-      def filter(params)
-        params.each do |par|
-          super get_string.gsub(Regexp.new(par, get_config(:ignore_case).to_boolean), '')
-        end
+      def filtered_regexp(str, params)
+        ''
       end
     end
 
@@ -295,15 +293,13 @@ module FilterRename
     end
 
 
-    class MoveTo < FilterBase
+    class MoveTo < FilterRegExp
       def self.hint; 'Move the text selected by REGEX to TARGET'; end
       def self.params; 'REGEX,TARGET'; end
 
-      def filter(params)
-        regex = Regexp.new(wrap_regex(params[0]), get_config(:ignore_case).to_boolean)
-        set_string(get_string.scan(regex).pop.to_a.pop, params[1])
-        str = get_string.gsub(regex, '')
-        super str
+      def filtered_regexp(str, params)
+        set_string(str, params[1])
+        ''
       end
     end
 
@@ -400,26 +396,23 @@ module FilterRename
     end
 
 
-    class Replace < FilterBase
+    class Replace < FilterRegExp
       def self.hint; 'Replace the text matching REGEX with REPLACE'; end
       def self.params; 'REGEX,REPLACE'; end
 
-      def filter(params)
-        regexp = Regexp.new(params[0], get_config(:ignore_case).to_boolean)
-        super get_string.gsub(regexp, params[1])
+      def filtered_regexp(str, params)
+        params[1]
       end
     end
 
 
-    class ReplaceFrom < FilterBase
+    class ReplaceFrom < FilterRegExp
       def self.hint; 'Replace the REGEX matching text with the TARGET content'; end
       def self.params; 'REGEX,TARGET'; end
 
-      def filter(params)
-        regexp = Regexp.new(params[0], get_config(:ignore_case).to_boolean)
-        super get_string.gsub(regexp, get_string(params[1]).to_s)
+      def filtered_regexp(str, params)
+        get_string(params[1]).to_s
       end
-
     end
 
 
@@ -627,14 +620,12 @@ module FilterRename
     end
 
 
-    class Wrap < FilterBase
+    class Wrap < FilterRegExp
       def self.hint; 'Wrap the text matching REGEX with SEPARATOR1 and SEPARATOR2'; end
       def self.params; 'REGEX,SEPARATOR1,SEPARATOR2'; end
 
-      def filter(params)
-        params[0] = "(#{params[0]})" unless params[0] =~ /[()]+/
-        regexp = Regexp.new("(#{params[0]})", get_config(:ignore_case).to_boolean)
-        super get_string.gsub(regexp, "#{params[1]}\\1#{params[2]}")
+      def filtered_regexp(str, params)
+        "#{params[1]}#{str}#{params[2]}"
       end
     end
 

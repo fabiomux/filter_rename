@@ -188,4 +188,24 @@ module FilterRename
     end
   end
 
+
+  class FilterRegExp < FilterBase
+
+    def filter(params)
+      super loop_regex(get_string, params)
+    end
+
+
+    private
+
+    def loop_regex(str, params)
+      str = str.gsub(Regexp.new(wrap_regex(params[0]), get_config(:ignore_case).to_boolean)) do |x|
+        self.send :filtered_regexp, x, params
+      end
+
+      str
+    end
+
+  end
+
 end
