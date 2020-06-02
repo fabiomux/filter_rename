@@ -71,7 +71,7 @@ module FilterRename
         super @cfg.target, value
       else
         super target, value
-      end
+      end unless value.nil?
     end
 
     def get_string(target = nil)
