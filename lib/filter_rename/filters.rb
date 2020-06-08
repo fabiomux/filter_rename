@@ -38,6 +38,16 @@ module FilterRename
     end
 
 
+    class AddNumberFrom < FilterNumber
+      def self.hint; 'Add the number from TARGET to the NTH'; end
+      def self.params; 'NTH;TARGET'; end
+
+      def filtered_number(num, params, param_num)
+        num.to_i + get_string(params[1]).to_i
+      end
+    end
+
+
     class Append < FilterBase
       def self.hint; 'Append the TEXT to the current target'; end
       def self.params; 'TEXT'; end
