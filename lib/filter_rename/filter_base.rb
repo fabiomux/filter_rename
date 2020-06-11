@@ -200,7 +200,8 @@ module FilterRename
 
     def loop_regex(str, params)
       str = str.gsub(Regexp.new(wrap_regex(params[0]), get_config(:ignore_case).to_boolean)) do |x|
-        self.send :filtered_regexp, x, params
+        matches = Regexp.last_match.clone
+        self.send(:filtered_regexp, x, params).to_s.gsub(/\\([0-9]+)/) { |y| matches[$1.to_i] }
       end
 
       str
