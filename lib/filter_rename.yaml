@@ -144,7 +144,7 @@
       - ignore_case:false
     -
       :replace:
-      - "([A-Z])([a-z!']+)"
+      - "(?<![A-Z])([A-Z])([a-z!',-]+)"
       - " \\1\\2 "
     -
       :replace:
