@@ -179,12 +179,16 @@ module FilterRename
 
 
     class CopyTo < FilterRegExp
-      def self.hint; 'Copy the text selected by REGEX to TARGET'; end
+      def self.hint; 'Copy the text selected by REGEX to TARGET or TARGET_#'; end
       def self.params; 'REGEX,TARGET'; end
 
-      def filtered_regexp(str, params)
-        set_string(str, params[1])
-        str
+      def filtered_regexp(matches, params)
+        if matches.length > 2
+          matches[1..-1].each_with_index { |x, i| set_string(x, "#{params[1]}_#{i.next}") }
+        else
+          set_string(matches[1], params[1])
+        end
+        matches[0]
       end
     end
 
@@ -212,7 +216,7 @@ module FilterRename
       def self.hint; 'Remove the text matching REGEX'; end
       def self.params; 'REGEX'; end
 
-      def filtered_regexp(str, params)
+      def filtered_regexp(matches, params)
         ''
       end
     end
@@ -304,11 +308,15 @@ module FilterRename
 
 
     class MoveTo < FilterRegExp
-      def self.hint; 'Move the text selected by REGEX to TARGET'; end
+      def self.hint; 'Move the text selected by REGEX to TARGET or TARGET_#'; end
       def self.params; 'REGEX,TARGET'; end
 
-      def filtered_regexp(str, params)
-        set_string(str, params[1])
+      def filtered_regexp(matches, params)
+        if matches.length > 2
+          matches[1..-1].each_with_index { |x, i| set_string(x, "#{params[1]}_#{i.next}") }
+        else
+          set_string(matches[1], params[1])
+        end
         ''
       end
     end
@@ -410,7 +418,7 @@ module FilterRename
       def self.hint; 'Replace the text matching REGEX with REPLACE'; end
       def self.params; 'REGEX,REPLACE'; end
 
-      def filtered_regexp(str, params)
+      def filtered_regexp(matches, params)
         params[1]
       end
     end
@@ -420,7 +428,7 @@ module FilterRename
       def self.hint; 'Replace the REGEX matching text with the TARGET content'; end
       def self.params; 'REGEX,TARGET'; end
 
-      def filtered_regexp(str, params)
+      def filtered_regexp(matches, params)
         get_string(params[1]).to_s
       end
     end
@@ -634,8 +642,8 @@ module FilterRename
       def self.hint; 'Wrap the text matching REGEX with SEPARATOR1 and SEPARATOR2'; end
       def self.params; 'REGEX,SEPARATOR1,SEPARATOR2'; end
 
-      def filtered_regexp(str, params)
-        "#{params[1]}#{str}#{params[2]}"
+      def filtered_regexp(matches, params)
+        "#{params[1]}#{matches[0]}#{params[2]}"
       end
     end
 
