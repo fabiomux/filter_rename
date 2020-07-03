@@ -113,7 +113,7 @@
       - '\1 \2'
   append_issue:
     :move_to:
-    - '(Issue|Volume) ([0-9]+)'
+    - 'Volume +([0-9]+)|Issue +([0-9]+)'
     - 'tmp'
     :template:
     - '<name> #<tmp>'
