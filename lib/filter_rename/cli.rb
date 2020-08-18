@@ -113,7 +113,7 @@ module FilterRename
         opt_parser.parse!(ARGV)
 
         (ARGV.empty? ? ARGF : ARGV).each do |f|
-          f = File.expand_path(f.strip)
+          f = File.expand_path(f.chomp)
 
           if File.exists?(f)
             options.files << f
