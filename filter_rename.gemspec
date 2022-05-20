@@ -16,9 +16,9 @@ Gem::Specification.new do |spec|
 
   spec.metadata      = {
     "bug_tracker_uri"   => "https://github.com/fabiomux/filter_rename/issues",
-    #"changelog_uri"     => "",
+    "changelog_uri"     => "https://freeaptitude.altervista.org/projects/filter-rename.htm#changelog",
     "documentation_uri" => "https://www.rubydoc.info/gems/filter_rename/#{spec.version}",
-    "homepage_uri"      => "https://github.com/fabiomux/filter_rename",
+    "homepage_uri"      => "https://freeaptitude.altervista.org/projects/filter-rename.html",
     #"mailing_list_uri"  => "",
     "source_code_uri"   => "https://github.com/fabiomux/filter_rename",
     "wiki_uri"          => "https://github.com/fabiomux/filter_rename/wiki"
