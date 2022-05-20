@@ -157,6 +157,16 @@ module FilterRename
     end
 
 
+    class CapitalizeWord < FilterWord
+      def self.hint; 'Capitalize the NTH word'; end
+      def self.params; 'NTH'; end
+
+      def filtered_word(word, params, param_num)
+        word.capitalize
+      end
+    end
+
+
     class CopyFrom < FilterBase
       def self.hint; 'Copy the text from TARGET'; end
       def self.params; 'TARGET'; end
