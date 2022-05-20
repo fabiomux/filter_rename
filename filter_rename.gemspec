@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Fabio Mucciante"]
   spec.email         = ["fabio.mucciante@gmail.com"]
 
-  spec.summary       = %q{Rename filenames through a chain of filter.}
-  spec.description   = %q{Rename filenames applying a cascade of commands called filters in specified portion of it called targets.}
+  spec.summary       = %q{File renaming tool which make use of a chain of actions called filters.}
+  spec.description   = %q{FilterRename is a bulk renaming tool, based on the concept of filters as small operations to perform over sections of the full filename logically represented in targets.}
   spec.homepage      = "https://github.com/fabiomux/filter_rename"
   spec.license       = "GPL-3.0"
 
