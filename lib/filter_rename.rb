@@ -48,8 +48,10 @@ module FilterRename
           if old_data[:full_filename]
             Messages.renamed!(old_data, fp.dest)
             Messages.changed_tags(fp, old_data, false) if fp.source.class.has_writable_tags
-          else
+          elsif fp.source.class.has_writable_tags
             Messages.changed_tags(fp, old_data)
+          else
+            Messages.file_exists(fp)
           end
 
         else
