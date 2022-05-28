@@ -1,6 +1,8 @@
 ---
 :global:
-  :hash_type: :none
+  :hash_type: :md5
+  :hash_on_tags: false
+  :hash_if_exists: true
   :date_format: '%Y-%m-%d'
   :counter_length: 3
   :counter_start: 0

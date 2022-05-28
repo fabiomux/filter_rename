@@ -53,12 +53,14 @@ module FilterRename
 
 
   class GlobalConfig
-    attr_reader :date_format, :hash_type, :counter_length, :counter_start, :targets,
+    attr_reader :date_format, :hash_type, :hash_on_tags, :hash_if_exists, :counter_length, :counter_start, :targets,
                 :pdf_metadata, :image_metadata, :mp3_metadata
 
     def initialize(cfg)
       @date_format = cfg[:date_format] || '%Y-%m-%d'
-      @hash_type =  cfg[:hash_type].to_sym || :none
+      @hash_type = cfg[:hash_type].to_sym || :md5
+      @hash_on_tags = cfg[:hash_on_tags] || false
+      @hash_if_exists = cfg[:hash_if_exists] || false
       @counter_length = cfg[:counter_length] || 4
       @counter_start = cfg[:counter_start] || 0
       @targets = cfg[:targets].to_sym || :short

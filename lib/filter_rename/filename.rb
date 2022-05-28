@@ -135,7 +135,7 @@ module FilterRename
 
       [@count, @ctime, @mtime, @size, @pretty_size].map(&:readonly!)
 
-      metatag_to_var!('hash', calculate_hash(@cfg.hash_type), true) unless @cfg.hash_type == :none
+      metatag_to_var!('hash', calculate_hash(@cfg.hash_type), true) if @cfg.hash_on_tags
     end
   end
 

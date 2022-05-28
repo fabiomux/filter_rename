@@ -52,6 +52,7 @@ module FilterRename
             Messages.changed_tags(fp, old_data)
           else
             Messages.file_exists(fp)
+            Messages.file_hash(fp, @cfg.global.hash_type) if @cfg.global.hash_if_exists
           end
 
         else
@@ -93,6 +94,7 @@ module FilterRename
             Messages.changed_tags(fp)
           else
             Messages.file_exists(fp)
+            Messages.file_hash(fp, @cfg.global.hash_type) if @cfg.global.hash_if_exists
           end
         else
           Messages.renamed(fp)
@@ -133,7 +135,6 @@ module FilterRename
         end
       end
     end
-
   end
 
 end
