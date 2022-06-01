@@ -648,6 +648,16 @@ module FilterRename
     end
 
 
+    class UppercaseWord < FilterWord
+      def self.hint; 'Uppercase the NTH word'; end
+      def self.params; 'NTH'; end
+
+      def filtered_word(word, params, param_num)
+        word.upcase
+      end
+    end
+
+
     class Wrap < FilterRegExp
       def self.hint; 'Wrap the text matching REGEX with SEPARATOR1 and SEPARATOR2'; end
       def self.params; 'REGEX,SEPARATOR1,SEPARATOR2'; end
