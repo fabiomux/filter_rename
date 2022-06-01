@@ -102,7 +102,9 @@ module FilterRename
 
       params[0..params_length.pred].each do |x|
         if x =~ /\.\./
-          indexes = indexes + Range.new(*(x.split('..').map {|y| send(callback, y, get_string) })).map { |i| i }
+          indexes = indexes + Range.new(*(x.split('..').map { |y| send(callback, y, get_string) })).map { |i| i }
+        elsif x =~ /:/
+          indexes = indexes + x.split(':').map { |y| send(callback, y, get_string) }
         else
           indexes << send(callback, x, get_string)
         end
