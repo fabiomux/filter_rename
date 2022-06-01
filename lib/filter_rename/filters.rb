@@ -317,6 +317,16 @@ module FilterRename
     end
 
 
+    class LowercaseWord < FilterWord
+      def self.hint; 'Lowercase the NTH word'; end
+      def self.params; 'NTH'; end
+
+      def filtered_word(word, params, param_num)
+        word.downcase
+      end
+    end
+
+
     class MoveTo < FilterRegExp
       def self.hint; 'Move the text selected by REGEX to TARGET or TARGET_#'; end
       def self.params; 'REGEX,TARGET'; end
