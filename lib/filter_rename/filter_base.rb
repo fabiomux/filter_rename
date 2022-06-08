@@ -130,9 +130,24 @@ module FilterRename
   class FilterWord < FilterBase
     include IndexedParams
 
+    def return_filtered_word
+      true
+    end
+
+    def string_to_loop
+      get_string
+    end
+
     def filter(params)
       expand_indexes(params, :word_idx)
-      super loop_words(get_string)
+
+      res = loop_words(string_to_loop)
+
+      if return_filtered_word
+        super res
+      else
+        super get_string
+      end
     end
 
 
