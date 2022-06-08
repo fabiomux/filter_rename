@@ -117,7 +117,7 @@ module FilterRename
       def self.hint; 'Append the TEXT to the NTH word'; end
       def self.params; 'NTH,TEXT'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         word + params[1]
       end
     end
@@ -127,10 +127,17 @@ module FilterRename
       def self.hint; 'Append the NTH word from TARGET'; end
       def self.params; 'NTH,TARGET'; end
 
-      def filter(params)
-        word = get_string(params[1]).split(ws)
-        idx = word_idx(params[0], word)
-        set_string [get_string, word[idx]].join(ws)
+      def string_to_loop
+        get_string(params[1])
+      end
+
+      def return_filtered_word
+        false
+      end
+
+      def filtered_word(word, param_num)
+        set_string([get_string, word].join(ws))
+        word
       end
     end
 
@@ -139,7 +146,7 @@ module FilterRename
       def self.hint; 'Append the NTH word to TARGET'; end
       def self.params; 'NTH,TARGET'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         set_string([get_string(params[1]), word].join(ws), params[1])
         word
       end
@@ -161,7 +168,7 @@ module FilterRename
       def self.hint; 'Capitalize the NTH word'; end
       def self.params; 'NTH'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         word.capitalize
       end
     end
@@ -209,12 +216,14 @@ module FilterRename
 
       def indexed_params; 2; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         case param_num
         when 1
           @word = word
-        when 2
-          word = @word + ws + word
+        when params_expanded.length
+          word = [@word, word].join(ws)
+        else
+          @word = [@word, word].join(ws)
         end
 
         word
@@ -246,7 +255,7 @@ module FilterRename
       def self.hint; 'Remove the NTH word'; end
       def self.params; 'NTH'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         nil
       end
     end
@@ -266,7 +275,7 @@ module FilterRename
       def self.hint; 'Insert the WORD after the NTH word'; end
       def self.params; 'NTH,WORD'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         [word, params[1]].join(ws)
       end
     end
@@ -276,23 +285,30 @@ module FilterRename
       def self.hint; 'Insert the WORD after the NTH word'; end
       def self.params; 'NTH,WORD'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         [params[1], word].join(ws)
       end
     end
 
 
     class JoinWords < FilterWord
-      def self.hint; 'Join the words from NTH1 to NTH2'; end
-      def self.params; 'NTH1,NTH2'; end
+      def self.hint; 'Join the words NTH1 and NTH2 and replace the NTH3 word with it'; end
+      def self.params; 'NTH1,NTH2,NTH3'; end
 
-      def filter(params)
-        res = get_string.split(ws)
-        istart = word_idx(params[0], get_string)
-        iend = word_idx(params[1], get_string)
+      def indexed_params; 3; end
 
-        res = res.insert(istart, res[istart..iend].join)
-        set_string res.delete_if.with_index { |x, idx| ((istart.next)..(iend.next)).include?(idx) }.join(ws)
+      def filtered_word(word, param_num)#(params)
+        case param_num
+        when 1
+          @word = word
+        when params_expanded.length
+          word = @word
+        else
+          @word += word
+          word = nil
+        end
+
+        word
       end
     end
 
@@ -321,7 +337,7 @@ module FilterRename
       def self.hint; 'Lowercase the NTH word'; end
       def self.params; 'NTH'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         word.downcase
       end
     end
@@ -359,13 +375,16 @@ module FilterRename
 
       def indexed_params; 2; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         case param_num
         when 1
           @word = word
           res = nil
-        when 2
+        when params_expanded.length
           res = [word, @word].join(ws)
+        else
+          @word = [@word, word].join(ws)
+          res = nil
         end
 
         res
@@ -377,7 +396,7 @@ module FilterRename
       def self.hint; 'Move the NTH word to TARGET'; end
       def self.params; 'NTH,TARGET'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         set_string(word, params[1])
         nil
       end
@@ -428,7 +447,7 @@ module FilterRename
       def self.hint; 'Prepend the TEXT to the NTH word'; end
       def self.params; 'NTH,TEXT'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         params[1] + word
       end
     end
@@ -468,7 +487,7 @@ module FilterRename
       def self.hint; 'Replace the NTH word with TEXT'; end
       def self.params; 'NTH,TEXT'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         params[1]
       end
     end
@@ -553,7 +572,7 @@ module FilterRename
       def self.hint; 'Split the NTH word using a REGEX with capturing groups'; end
       def self.params; 'NTH,REGEX'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         word.scan(Regexp.new(wrap_regex(params[1]), get_config(:ignore_case))).pop.to_a.join(ws)
       end
     end
@@ -595,13 +614,17 @@ module FilterRename
 
       def indexed_params; 2; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         case param_num
         when 1
           @word = word.clone
-          word = get_string.split(ws)[params[1].to_i.pred]
-        when 2
+          @last_word = get_string.split(ws)[params_expanded[-1]]
+          word = @last_word
+        when params_expanded.length
           word = @word
+        else
+          @word = [@word, word].join(ws)
+          word = nil
         end
 
         word
@@ -662,7 +685,7 @@ module FilterRename
       def self.hint; 'Uppercase the NTH word'; end
       def self.params; 'NTH'; end
 
-      def filtered_word(word, params, param_num)
+      def filtered_word(word, param_num)
         word.upcase
       end
     end
@@ -679,19 +702,11 @@ module FilterRename
 
 
     class WrapWords < FilterWord
-      def self.hint; 'Wrap the words between the NTH1 and the NTH2 with SEPARATOR1 and SEPARATOR2'; end
-      def self.params; 'NTH1,NTH2,SEPARATOR1,SEPARATOR2'; end
+      def self.hint; 'Wrap the NTH word with SEPARATOR1 and SEPARATOR2'; end
+      def self.params; 'NTH,SEPARATOR1,SEPARATOR2'; end
 
-      def indexed_params; 2; end
-
-      def filtered_word(word, params, param_num)
-        case param_num
-        when 1
-          word = "#{params[2]}#{word}"
-        when 2
-          word = "#{word}#{params[3]}"
-        end
-        word
+      def filtered_word(word, param_num)
+        "#{params[1]}#{word}#{params[2]}"
       end
     end
   end
