@@ -96,6 +96,8 @@ module FilterRename
 
   module IndexedParams
 
+    attr_reader :params, :params_expanded
+
     def get_indexes(params, callback)
       indexes = []
       params_length = (indexed_params == 0) ? params.length : indexed_params
@@ -114,6 +116,11 @@ module FilterRename
       indexes
     end
 
+    def expand_indexes(params, callback)
+      @params = params
+      @params_expanded = get_indexes(params, callback)
+    end
+
     def indexed_params
       1
     end
@@ -124,7 +131,8 @@ module FilterRename
     include IndexedParams
 
     def filter(params)
-      super loop_words(get_string, get_indexes(params, :word_idx), params)
+      expand_indexes(params, :word_idx)
+      super loop_words(get_string)
     end
 
 
@@ -143,11 +151,11 @@ module FilterRename
       idx.to_i
     end
 
-    def loop_words(str, arr_index, params)
+    def loop_words(str)
       str = str.split(ws)
 
-      arr_index.each_with_index do |idx, param_num|
-        str[idx] = send :filtered_word, str[idx], params, param_num.next
+      params_expanded.each_with_index do |idx, param_num|
+        str[idx] = send :filtered_word, str[idx], param_num.next
       end
 
       str.delete_if(&:nil?).join(ws)
