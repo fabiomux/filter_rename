@@ -113,6 +113,10 @@ module FilterRename
     def get_number(idx)
       self.scan(/\d+/)[idx]
     end
+
+    def get_numbers
+      self.scan(/\d+/)
+    end
   end
 
 
