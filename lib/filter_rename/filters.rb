@@ -32,7 +32,7 @@ module FilterRename
       def self.hint; 'Add NUM to the NTH number'; end
       def self.params; 'NTH,NUM'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         num.to_i + params[1].to_i
       end
     end
@@ -42,7 +42,7 @@ module FilterRename
       def self.hint; 'Add the number from TARGET to the NTH'; end
       def self.params; 'NTH;TARGET'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         num.to_i + get_string(params[1]).to_i
       end
     end
@@ -95,7 +95,7 @@ module FilterRename
       def self.hint; 'Append the NTH number to TARGET'; end
       def self.params; 'NTH,TARGET'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         str = get_string(params[1])
         set_string("#{str}#{num}", params[1])
         num
@@ -107,7 +107,7 @@ module FilterRename
       def self.hint; 'Append the TEXT to the NTH number'; end
       def self.params; 'NTH,TEXT'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         "#{num}#{params[1]}"
       end
     end
@@ -131,8 +131,8 @@ module FilterRename
         get_string(params[1])
       end
 
-      def return_filtered_word
-        false
+      def self_targeted?
+        true
       end
 
       def filtered_word(word, param_num)
@@ -145,6 +145,10 @@ module FilterRename
     class AppendWordTo < FilterWord
       def self.hint; 'Append the NTH word to TARGET'; end
       def self.params; 'NTH,TARGET'; end
+
+      def self_targeted?
+        params[-1] == current_target
+      end
 
       def filtered_word(word, param_num)
         set_string([get_string(params[1]), word].join(ws), params[1])
@@ -185,10 +189,10 @@ module FilterRename
 
 
     class CopyNumberTo < FilterNumber
-      def self.hint; 'Move the NTH number to TARGET'; end
+      def self.hint; 'Copy the NTH number to TARGET'; end
       def self.params; 'NTH,TARGET'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         set_string(num, params[1])
         num
       end
@@ -245,7 +249,7 @@ module FilterRename
       def self.hint; 'Remove the NTH number'; end
       def self.params; 'NTH'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         ''
       end
     end
@@ -265,7 +269,7 @@ module FilterRename
       def self.hint; 'Format the NTH number adding leading zeroes to have LENGTH'; end
       def self.params; 'NTH,LENGTH'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         num.to_i.to_s.rjust(params[1].to_i, '0')
       end
     end
@@ -297,7 +301,7 @@ module FilterRename
 
       def indexed_params; 3; end
 
-      def filtered_word(word, param_num)#(params)
+      def filtered_word(word, param_num)
         case param_num
         when 1
           @word = word
@@ -359,10 +363,10 @@ module FilterRename
 
 
     class MoveNumberTo < FilterNumber
-      def self.hint; 'Move the NTH number to TARGET'; end
+      def self.hint; 'Move the NTH number to TARGET overwriting it'; end
       def self.params; 'NTH,TARGET'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         set_string(num, params[1])
         ''
       end
@@ -393,8 +397,12 @@ module FilterRename
 
 
     class MoveWordTo < FilterWord
-      def self.hint; 'Move the NTH word to TARGET'; end
+      def self.hint; 'Move the NTH word to TARGET overwriting it'; end
       def self.params; 'NTH,TARGET'; end
+
+      def self_targeted?
+        params[-1] == current_target
+      end
 
       def filtered_word(word, param_num)
         set_string(word, params[1])
@@ -407,7 +415,7 @@ module FilterRename
       def self.hint; 'Multiply the NTH number with NUM'; end
       def self.params; 'NTH,NUM'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         num.to_i * params[1].to_i
       end
     end
@@ -437,7 +445,7 @@ module FilterRename
       def self.hint; 'Prepend the TEXT to the NTH number'; end
       def self.params; 'NTH,TEXT'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         "#{params[1]}#{num}"
       end
     end
@@ -451,6 +459,9 @@ module FilterRename
         params[1] + word
       end
     end
+
+
+    # PrependWordFrom....
 
 
     class Replace < FilterRegExp
@@ -477,7 +488,7 @@ module FilterRename
       def self.hint; 'Replace the NTH number with NUMBER'; end
       def self.params; 'NTH,NUMBER'; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         params[1]
       end
     end
@@ -594,13 +605,17 @@ module FilterRename
 
       def indexed_params; 2; end
 
-      def filtered_number(num, params, param_num)
+      def filtered_number(num, param_num)
         case param_num
         when 1
           @number = num.clone
-          num = get_string.get_number(params[1].to_i.pred)
-        when 2
+          @last_number = get_string.get_number(params_expanded[-1].to_i)
+          num = @last_number
+        when params_expanded.length
           num = @number
+        else
+          @number = [@number, num].join(ns)
+          num = @last_number
         end
 
         num
