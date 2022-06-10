@@ -91,6 +91,9 @@ module FilterRename
       str
     end
 
+    def current_target
+      @cfg.target.to_s
+    end
   end
 
 
@@ -121,8 +124,16 @@ module FilterRename
       @params_expanded = get_indexes(params, callback)
     end
 
+    def string_to_loop
+      get_string
+    end
+
     def indexed_params
       1
+    end
+
+    def self_targeted?
+      false
     end
   end
 
@@ -130,23 +141,15 @@ module FilterRename
   class FilterWord < FilterBase
     include IndexedParams
 
-    def return_filtered_word
-      true
-    end
-
-    def string_to_loop
-      get_string
-    end
-
     def filter(params)
       expand_indexes(params, :word_idx)
 
       res = loop_words(string_to_loop)
 
-      if return_filtered_word
-        super res
-      else
+      if self_targeted?
         super get_string
+      else
+        super res
       end
     end
 
@@ -183,11 +186,22 @@ module FilterRename
     include IndexedParams
 
     def filter(params)
-      super loop_numbers(get_string, get_indexes(params, :num_idx), params)
+      expand_indexes(params, :num_idx)
+      res = loop_numbers(string_to_loop)
+
+      if self_targeted?
+        super get_string
+      else
+        super res
+      end
     end
 
 
     private
+
+    def ns
+      get_config(:number_separator)
+    end
 
     def num_idx(idx, str)
       if idx.to_i < 0
@@ -198,15 +212,14 @@ module FilterRename
       idx.to_i
     end
 
-    def loop_numbers(str, arr_index, params)
-      arr_index.each_with_index do |idx, param_idx|
-        str = str.map_number_with_index do |num, i|
-          if idx == i
-            num = self.send :filtered_number, num, params, param_idx.next
-          end
+    def loop_numbers(str)
+      numbers = str.get_numbers
 
-          num
-        end
+      params_expanded.each_with_index do |idx, param_idx|
+        numbers[idx] = self.send :filtered_number, numbers[idx], param_idx.next
+      end
+      str = str.map_number_with_index do |num, i|
+        numbers[i]
       end
 
       str
