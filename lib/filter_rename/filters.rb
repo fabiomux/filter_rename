@@ -461,8 +461,23 @@ module FilterRename
     end
 
 
-    # PrependWordFrom....
+    class PrependWordFrom < FilterWord
+      def self.hint; 'Prepend the NTH word from TARGET'; end
+      def self.params; 'NTH,TARGET'; end
 
+      def string_to_loop
+        get_string(params[1])
+      end
+
+      def self_targeted?
+        true
+      end
+
+      def filtered_word(word, param_num)
+        set_string([word, get_string].join(ws))
+        word
+      end
+    end
 
     class Replace < FilterRegExp
       def self.hint; 'Replace the text matching REGEX with REPLACE'; end
