@@ -99,29 +99,36 @@ module FilterRename
 
   module IndexedParams
 
-    attr_reader :params, :params_expanded
+    attr_reader :params, :params_expanded, :items
 
-    def get_indexes(params, callback)
+    def normalize_index(idx)
+      max_length = items.length
+      raise IndexOutOfRange, [idx, max_length] if idx.to_i > max_length || idx.to_i < -max_length
+
+      if idx.to_i.positive?
+        idx = idx.to_i.pred  # % max_length
+      elsif idx.to_i.negative?
+        idx = idx.to_i + max_length # % max_length
+      end
+      idx.to_i
+    end
+
+    def get_indexes
       indexes = []
       params_length = (indexed_params == 0) ? params.length : indexed_params
 
       params[0..params_length.pred].each do |x|
         if x =~ /\.\./
-          indexes = indexes + Range.new(*(x.split('..').map { |y| send(callback, y, get_string) })).map { |i| i }
+          indexes = indexes + Range.new(*(x.split('..').map { |y| normalize_index(y) })).map { |i| i }
         elsif x =~ /:/
-          indexes = indexes + x.split(':').map { |y| send(callback, y, get_string) }
+          indexes = indexes + x.split(':').map { |y| normalize_index(y) }
         else
-          indexes << send(callback, x, get_string)
+          indexes << normalize_index(x)
         end
 
       end
 
       indexes
-    end
-
-    def expand_indexes(params, callback)
-      @params = params
-      @params_expanded = get_indexes(params, callback)
     end
 
     def string_to_loop
@@ -135,16 +142,13 @@ module FilterRename
     def self_targeted?
       false
     end
-  end
-
-
-  class FilterWord < FilterBase
-    include IndexedParams
 
     def filter(params)
-      expand_indexes(params, :word_idx)
+      @params = params
+      @items = indexed_items
+      @params_expanded = get_indexes
 
-      res = loop_words(string_to_loop)
+      res = loop_items
 
       if self_targeted?
         super get_string
@@ -152,6 +156,12 @@ module FilterRename
         super res
       end
     end
+  end
+
+
+  class FilterWord < FilterBase
+
+    include IndexedParams
 
 
     private
@@ -160,17 +170,12 @@ module FilterRename
       get_config(:word_separator)
     end
 
-    def word_idx(idx, str)
-      if idx.to_i.positive?
-        idx = idx.to_i.pred
-      elsif idx.to_i.negative?
-        idx = idx.to_i + str.split(ws).length
-      end
-      idx.to_i
+    def indexed_items
+      string_to_loop.split(ws)
     end
 
-    def loop_words(str)
-      str = str.split(ws)
+    def loop_items
+      str = items.clone
 
       params_expanded.each_with_index do |idx, param_num|
         str[idx] = send :filtered_word, str[idx], param_num.next
@@ -178,23 +183,12 @@ module FilterRename
 
       str.delete_if(&:nil?).join(ws)
     end
-
   end
+
 
   class FilterNumber < FilterBase
 
     include IndexedParams
-
-    def filter(params)
-      expand_indexes(params, :num_idx)
-      res = loop_numbers(string_to_loop)
-
-      if self_targeted?
-        super get_string
-      else
-        super res
-      end
-    end
 
 
     private
@@ -203,17 +197,13 @@ module FilterRename
       get_config(:number_separator)
     end
 
-    def num_idx(idx, str)
-      if idx.to_i < 0
-        idx = str.scan(/\d+/).length + idx.to_i
-      elsif idx.to_i > 0
-        idx = idx.to_i.pred
-      end
-      idx.to_i
+    def indexed_items
+      string_to_loop.get_numbers
     end
 
-    def loop_numbers(str)
-      numbers = str.get_numbers
+    def loop_items
+      str = string_to_loop
+      numbers = items.clone
 
       params_expanded.each_with_index do |idx, param_idx|
         numbers[idx] = self.send :filtered_number, numbers[idx], param_idx.next

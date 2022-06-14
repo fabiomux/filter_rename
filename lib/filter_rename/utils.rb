@@ -223,6 +223,12 @@ module FilterRename
     end
   end
 
+  class IndexOutOfRange < StandardError
+    def initialize(values)
+      super "Invalid index '#{values[0]}' out of the range 1..#{values[1]}, -#{values[1]}..-1"
+    end
+  end
+
   class UnknownHashCode < StandardError
     def initialize(hash_type)
       super "Invalid hash type: #{hash_type}"
