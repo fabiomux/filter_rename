@@ -13,6 +13,7 @@
   :lang: :en
   :word_separator: " "
   :number_separator: '.'
+  :occurrence_separator: '-'
   :target: :name
   :ignore_case: true
   :grep: '.*'

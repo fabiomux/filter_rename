@@ -72,11 +72,12 @@ module FilterRename
 
 
   class FilterConfig
-    attr_accessor  :word_separator, :number_separator, :target, :ignore_case, :lang, :grep, :grep_on, :grep_exclude, :grep_target
+    attr_accessor :word_separator, :number_separator, :occurrence_separator, :target, :ignore_case, :lang, :grep, :grep_on, :grep_exclude, :grep_target
 
     def initialize(cfg)
       @word_separator = cfg[:word_separator] || ' '
       @number_separator = cfg[:number_separator] || '.'
+      @occurrence_separator = cfg[:occurrence_separator] || '-'
       @target = cfg[:target].to_sym || :name
       @ignore_case = cfg[:ignore_case].nil? ? true : cfg[:ignore_case].to_boolean
       @lang = (cfg[:lang] || :en).to_sym

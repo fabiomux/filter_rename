@@ -237,4 +237,36 @@ module FilterRename
 
   end
 
+
+  class FilterOccurrence < FilterBase
+
+    include IndexedParams
+
+
+    private
+
+    def os
+      get_config(:occurrence_separator)
+    end
+
+    def indexed_items
+      string_to_loop.scan(Regexp.new(params[indexed_params]))
+    end
+
+    def loop_items
+      str = string_to_loop
+      regexp = Regexp.new(params[indexed_params])
+      occurences = items.clone
+
+      params_expanded.each_with_index do |idx, param_idx|
+        occurences[idx] = self.send :filtered_occurrence, occurences[idx], param_idx.next
+      end
+      str = str.gsub(regexp).with_index do |item, i|
+        occurences[i]
+      end
+
+      str
+    end
+  end
+
 end
