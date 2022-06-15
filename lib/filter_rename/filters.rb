@@ -95,6 +95,10 @@ module FilterRename
       def self.hint; 'Append the NTH number to TARGET'; end
       def self.params; 'NTH,TARGET'; end
 
+      def self_targeted?
+        params[-1] == current_target
+      end
+
       def filtered_number(num, param_num)
         str = get_string(params[1])
         set_string("#{str}#{num}", params[1])
@@ -192,9 +196,28 @@ module FilterRename
       def self.hint; 'Copy the NTH number to TARGET'; end
       def self.params; 'NTH,TARGET'; end
 
+      def self_targeted?
+        params[-1] == current_target
+      end
+
       def filtered_number(num, param_num)
         set_string(num, params[1])
         num
+      end
+    end
+
+
+    class CopyOccurrenceTo < FilterOccurrence
+      def self.hint; 'Copy the NTH occurrence of REGEX to TARGET'; end
+      def self.params; 'NTH,REGEX,TARGET'; end
+
+      def self_targeted?
+        params[-1] == current_target
+      end
+
+      def filtered_occurrence(occurrence, param_num)
+        set_string(occurrence, params[-1])
+        occurrence
       end
     end
 
@@ -251,6 +274,16 @@ module FilterRename
 
       def filtered_number(num, param_num)
         ''
+      end
+    end
+
+
+    class DeleteOccurrence < FilterOccurrence
+      def self.hint; 'Delete the NTH occurrence of REGEXP'; end
+      def self.params; 'NTH,REGEXP'; end
+
+      def filtered_occurrence(occurrence, param_num)
+        nil
       end
     end
 
@@ -366,9 +399,28 @@ module FilterRename
       def self.hint; 'Move the NTH number to TARGET overwriting it'; end
       def self.params; 'NTH,TARGET'; end
 
+      def self_targeted?
+        params[-1] == current_target
+      end
+
       def filtered_number(num, param_num)
         set_string(num, params[1])
         ''
+      end
+    end
+
+
+    class MoveOccurrenceTo < FilterOccurrence
+      def self.hint; 'Move the NTH occurrence of REGEX to TARGET overwriting it'; end
+      def self.params; 'NTH,REGEX,TARGET'; end
+
+      def self_targeted?
+        params[-1] == current_target
+      end
+
+      def filtered_occurrence(occurrence, param_num)
+        set_string(occurrence, params[-1])
+        nil
       end
     end
 
@@ -479,6 +531,7 @@ module FilterRename
       end
     end
 
+
     class Replace < FilterRegExp
       def self.hint; 'Replace the text matching REGEX with REPLACE'; end
       def self.params; 'REGEX,REPLACE'; end
@@ -505,6 +558,16 @@ module FilterRename
 
       def filtered_number(num, param_num)
         params[1]
+      end
+    end
+
+
+    class ReplaceOccurrence < FilterOccurrence
+      def self.hint; 'Replace the NTH occurrence of REGEXP with TEXT'; end
+      def self.params; 'NTH,REGEXP,TEXT'; end
+
+      def filtered_occurrence(occurrence, param_num)
+        params[2]
       end
     end
 
