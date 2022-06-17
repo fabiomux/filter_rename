@@ -338,6 +338,7 @@ module FilterRename
         case param_num
         when 1
           @word = word
+          word = nil
         when params_expanded.length
           word = @word
         else
