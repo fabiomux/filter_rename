@@ -328,6 +328,29 @@ module FilterRename
     end
 
 
+    class JoinNumbers < FilterNumber
+      def self.hint; 'Join the words NTH1 and NTH2 and replace the NTH3 number with it'; end
+      def self.params; 'NTH1,NTH2,NTH3'; end
+
+      def indexed_params; 3; end
+
+      def filtered_number(number, param_num)
+        case param_num
+        when 1
+          @number = number
+          number = nil
+        when params_expanded.length
+          number = @number
+        else
+          @number += number
+          number = nil
+        end
+
+        number
+      end
+    end
+
+
     class JoinWords < FilterWord
       def self.hint; 'Join the words NTH1 and NTH2 and replace the NTH3 word with it'; end
       def self.params; 'NTH1,NTH2,NTH3'; end
@@ -515,7 +538,7 @@ module FilterRename
 
 
     class PrependWordFrom < FilterWord
-      def self.hint; 'Prepend the NTH word from TARGET'; end
+      def self.hint; 'Prepend with TARGET the NTH word'; end
       def self.params; 'NTH,TARGET'; end
 
       def string_to_loop
