@@ -26,7 +26,7 @@ module FilterRename
 
       Mp3Info.open(full_filename) do |mp3|
         old_data.merge!({ title: mp3.tag.title, artist: mp3.tag.artist, album: mp3.tag.album,
-                          tracknum: mp3.tag.tracknum, comments: mp3.tag.comments, year: mp3.tag.year,
+                          track: mp3.tag.tracknum, comments: mp3.tag.comments, year: mp3.tag.year,
                           genre: mp3.tag.genre, genre_s: mp3.tag.genre_s })
 
         mp3.tag.title = dest.get_string(:title)
