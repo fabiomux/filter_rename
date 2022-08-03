@@ -21,6 +21,15 @@ module FilterRename
 
   module ReadableVariables
 
+    def basic!
+      @custom = false
+      self
+    end
+
+    def custom?
+      @custom == true || @custom == nil
+    end
+
     def readonly!
       @writable = false
       self
@@ -176,7 +185,7 @@ module FilterRename
       old_source = old_data.empty? ? fp.source.values : old_data
 
       fp.dest.values.each do |k, v|
-        puts "    #{k}: ".bold.green + (old_source[k] || '-') + ' > '.bold.green + v if ((v != old_source[k]) && (!old_source[k].nil?))
+        puts "    #{k}: ".rjust(15, ' ').bold.green + (old_source[k].to_s.empty? ? ' ~ '.bold.red : old_source[k].to_s) + ' => '.bold.green + v.to_s if ((v.to_s != old_source[k].to_s) && fp.source.writable?(k) && fp.source.custom?(k))
       end
     end
 

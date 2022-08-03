@@ -100,6 +100,14 @@ module FilterRename
       res
     end
 
+    def writable?(tag)
+      instance_variable_get("@#{tag}".to_sym).writable?
+    end
+
+    def custom?(tag)
+      instance_variable_get("@#{tag}".to_sym).custom?
+    end
+
     def values
       res = {}
       instance_variables.each do |v|
@@ -134,6 +142,8 @@ module FilterRename
       @pretty_size = pretty_size(@size)
 
       [@count, @ctime, @mtime, @size, @pretty_size].map(&:readonly!)
+
+      [@ext, @name, @path, @folder, @path, @count, @ctime, @size, @pretty_size].map(&:basic!)
 
       metatag_to_var!('hash', calculate_hash(@cfg.hash_type), true) if @cfg.hash_on_tags
     end
