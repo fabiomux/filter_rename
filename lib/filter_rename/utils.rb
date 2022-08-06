@@ -200,7 +200,7 @@ module FilterRename
       hash_dest = klass.file fp.dest.filename
 
       puts "    #{hash_src == hash_dest ? '[=]'.green : '[>]'.red} #{hash_type.to_s.upcase} source: #{hash_src.to_s.send(hash_src == hash_dest ? :green : :red)}"
-      puts "    #{hash_src == hash_dest ? '[=]'.green : '[<]'.red} #{hash_type.to_s.upcase} dest:   #{hash_src.to_s.send(hash_src == hash_dest ? :green : :red)}"
+      puts "    #{hash_src == hash_dest ? '[=]'.green : '[<]'.red} #{hash_type.to_s.upcase} dest:   #{hash_dest.to_s.send(hash_src == hash_dest ? :green : :red)}"
     end
 
     def self.short_targets(ff)
