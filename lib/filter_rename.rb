@@ -80,7 +80,7 @@ module FilterRename
       raise MissingFiles if @files.empty?
 
       @filters.expand_macros!(@cfg.macro)
-      cache = []
+      cache = {}
 
       Messages.label "Dry Run:"
       @files.each do |src|
@@ -89,17 +89,17 @@ module FilterRename
 
         if fp.unchanged?
           Messages.skipping(fp)
-        elsif (cache.include?(fp.dest.full_filename) || fp.dest.exists?)
+        elsif (cache.keys.include?(fp.dest.full_filename) || fp.dest.exists?)
           if fp.source.full_filename == fp.dest.full_filename
             Messages.changed_tags(fp)
           else
             Messages.file_exists(fp)
-            Messages.file_hash(fp, @cfg.global.hash_type) if @cfg.global.hash_if_exists
+            Messages.file_hash(fp, @cfg.global.hash_type, cache[fp.dest.full_filename]) if @cfg.global.hash_if_exists
           end
         else
           Messages.renamed(fp)
           Messages.changed_tags(fp, {}, false) if fp.source.class.has_writable_tags
-          cache << fp.dest.full_filename
+          cache[fp.dest.full_filename] = fp.dest
         end
       end
     end

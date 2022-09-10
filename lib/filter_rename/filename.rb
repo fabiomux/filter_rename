@@ -2,6 +2,8 @@ module FilterRename
 
   class Filename
 
+    attr_reader :original
+
     def self.has_writable_tags
       false
     end
@@ -11,6 +13,7 @@ module FilterRename
       @@count += 1
       @cfg = cfg
 
+      @original = fname
       load_filename_data(fname)
     end
 

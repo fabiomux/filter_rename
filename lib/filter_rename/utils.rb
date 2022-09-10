@@ -193,11 +193,11 @@ module FilterRename
       Messages.error "<#{fp.source.filename}> can't be renamed in <#{fp.dest.filename}>, it exists!"
     end
 
-    def self.file_hash(fp, hash_type)
+    def self.file_hash(fp, hash_type, cached = nil)
       raise UnknownHashCode, hash_type unless [:sha1, :sha2, :md5].include?(hash_type.to_sym)
       klass = Object.const_get("Digest::#{hash_type.to_s.upcase}")
       hash_src = klass.file fp.source.filename
-      hash_dest = klass.file fp.dest.filename
+      hash_dest = cached ? klass.file(cached.original) : klass.file(fp.dest.filename)
 
       puts "    #{hash_src == hash_dest ? '[=]'.green : '[>]'.red} #{hash_type.to_s.upcase} source: #{hash_src.to_s.send(hash_src == hash_dest ? :green : :red)}"
       puts "    #{hash_src == hash_dest ? '[=]'.green : '[<]'.red} #{hash_type.to_s.upcase} dest:   #{hash_dest.to_s.send(hash_src == hash_dest ? :green : :red)}"
