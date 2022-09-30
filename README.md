@@ -1,82 +1,105 @@
 # FilterRename
 
-FilterRename is a CLI tool created to rename a bunch of files at once applying a cascade of
-self-explainatory options called _filters_, in order to substitute all the other shell commands
-(like _sed_, _awk_, _trim_, ... ) and personal shell script to achieve that goal safely and
-in comfortable manner.
+FilterRename is a CLI tool created for bulk file renaming that work appending a set of micro
+operations here called *filters*, which aim to replace most, if not all, the shell commands
+usually involved in that kind of operations (*sed*, *awk*, *trim*, ...) in a more safe and
+comfortable manner.
+
+## Installation
+
+### Rubygem
+
+Install it as a regular Ruby gem with:
+```shell
+$ gem install filter_rename
+```
+
+## Usage
 
 To simplify the whole process through a command line, the full filename is logically organized
-in _targets_ like:
+in *targets*:
 
-    <path>/<folder>/<name><ext>
+> <path>/<folder>/<name><ext>
 
-Considering the file `/home/fabio/Documents/Ruby/filter_rename/Gemfile.lock` we have:
+For example, considering the file `/home/fabio/Documents/Ruby/filter_rename/Gemfile.lock` we have:
 
 - path: */home/fabio/Documents/Ruby*
 - folder: *filter_rename*
 - name: *Gemfile*
 - ext: *.lock*
 
-The chain of filters will be applied to the current _target_ which can be selected using the *--select*
-option, the default target is _name_.
+The chain of *filters* will be applied to the current *target*, which is *name* by default, but can
+be changed using the *--select* option on the same command line without running the command twice.
 
-## Installation
+For example, to capitalize the *ext* and upper case the *name* at the same time we can use:
+```shell
+filter_rename Gemfile.lock --uppercase --select ext --capitalize
+```
 
-Install it yourself as:
+So the file *Gemfile.lock* becomes *GEMFILE.Lock*.
 
-    $ gem install filter_rename
+To make things easier we can use a special class of *filters* that target a string as a list of *words*
+or *numbers* with their position used as index.
 
-## Usage
-
-The main concept about FilterRename is the _target_ manipulation with a chain of _filters_
-executed one by one as they appear in the argument's list.
-
-There are three main operations:
-* _preview_: show the results without make any change (default);
-* _dry-run_: executes a simulation warning when a conflict is raised;
-* _apply_: confirm the changes and rename the files unless the destination file exists.
-
-Having the files:
+For example, having the files:
 
     home
       fabio
         Documents
           Photos
             Vacations
-              image_portofino_1.jpg
-              image_portofino_2.jpg
-              image_portofino_3.jpg
+              image_from_portofino_0.jpg
+              image_from_portofino_1.jpg
+              image_from_portofino_2.jpg
               ...
 
-to replace _underscores_ with _spaces_ and _capitalize_ each word let's execute:
+We want:
+- space-separated words in place of the underscore;
+- the first and third word capitalized;
+- the final number must start from 1;
+- the final number must be 2 digits wide.
 
-    filter_rename /home/fabio/Documents/Photos/Vacations/*.jpg --spacify '_' --capitalize --apply
+Using:
+```shell
+$ filter_rename /home/fabio/Documents/Photos/Vacations/*.jpg \
+                --spacify '_' \
+                --capitalize-word 1:3 \
+                --add-number 1,1 \
+                --format-number 1,2
+```
 
-and the result will be:
+The result is:
 
     home
       fabio
         Documents
           Photos
             Vacations
-              Image Portofino 1.jpg
-              Image Portofino 2.jpg
-              Image Portofino 3.jpg
+              Image from Portofino 01.jpg
+              Image from Portofino 02.jpg
+              Image from Portofino 03.jpg
               ...
 
+If you are wondering why all the commands above didn't affected the files physically on the disk,
+then must be aware of the three main operations contemplated:
+- *preview*: shows the results verbosly without making any change (default);
+- *dry-run*: executes a simulation warning also for renaming conflicts;
+- *apply*: confirm the changes and rename the files unless the destination file exists.
+
+Last but not least filter_rename also supports *macros* and *regular expressions*, and the ability to
+setup configurations params on the fly (*config* and *global*).
 
 ## Get help
 
 Where to start
+```shell
+$ filter_rename --help
+```
 
-    $ filter_rename --help
+## More help
 
-More help
+More info is available at:
+- the [FilterRename GitHub wiki][filter_rename_wiki].
 
-- The wiki page: https://github.com/fabiomux/filter_rename/wiki
 
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/fabio_mux/filter_rename. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
-
+[filter_rename_wiki]: https://github.com/fabiomux/filter_rename/wiki "FilterRename wiki page on GitHub"
