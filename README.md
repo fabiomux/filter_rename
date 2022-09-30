@@ -19,7 +19,7 @@ $ gem install filter_rename
 To simplify the whole process through a command line, the full filename is logically organized
 in *targets*:
 
-> <path>/<folder>/<name><ext>
+    <path>/<folder>/<name><ext>
 
 For example, considering the file `/home/fabio/Documents/Ruby/filter_rename/Gemfile.lock` we have:
 
