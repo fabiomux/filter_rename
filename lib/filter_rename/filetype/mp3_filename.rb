@@ -1,10 +1,13 @@
-require 'mp3info'
+# frozen_string_literal: true
+
+require "mp3info"
 
 module FilterRename
-
+  #
+  # Mp3 files tags handling.
+  #
   class Mp3Filename < Filename
-
-    def self.has_writable_tags
+    def self.writable_tags?
       true
     end
 
@@ -14,11 +17,11 @@ module FilterRename
       load_mp3_data(fname)
     end
 
-    def ==(dest)
+    def ==(other)
       super &&
-      ([ @title, @artist, @album, @track, @comments, @year, @genre, @genre_s ] ==
-       [ dest.get_string(:title), dest.get_string(:artist), dest.get_string(:album), dest.get_string(:track),
-         dest.get_string(:comments), dest.get_string(:year), dest.get_string(:genre), dest.get_string(:genre_s) ])
+        ([@title, @artist, @album, @track, @comments, @year, @genre, @genre_s] ==
+         [other.get_string(:title), other.get_string(:artist), other.get_string(:album), other.get_string(:track),
+          other.get_string(:comments), other.get_string(:year), other.get_string(:genre), other.get_string(:genre_s)])
     end
 
     def rename!(dest)
@@ -35,7 +38,7 @@ module FilterRename
         mp3.tag.tracknum = dest.get_string(:track)
         mp3.tag.comments = dest.get_string(:comments).to_s
         mp3.tag.year = dest.get_string(:year)
-        mp3.tag.genre = dest.get_string(:genre).to_i % 256 
+        mp3.tag.genre = dest.get_string(:genre).to_i % 256
         mp3.tag.genre_s = dest.get_string(:genre_s)
       end
 
@@ -57,7 +60,6 @@ module FilterRename
        "
     end
 
-
     private
 
     def load_mp3_data(fname)
@@ -69,16 +71,14 @@ module FilterRename
       @comments = mp3info.tag.comments.to_s
       @year = mp3info.tag.year.to_i
       @genre = mp3info.tag.genre.to_i
-      @genre_s =  mp3info.tag.genre_s.to_s
+      @genre_s = mp3info.tag.genre_s.to_s
 
       # read only stuff
-      @vbr = (mp3info.tag.vbr ? 'vbr' : '')
+      @vbr = (mp3info.tag.vbr ? "vbr" : "")
       @samplerate = mp3info.samplerate.to_s
       @bitrate = mp3info.bitrate.to_s
 
       [@vbr, @samplerate, @bitrate].map(&:readonly!)
     end
-
   end
-
 end

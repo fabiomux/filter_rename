@@ -1,9 +1,12 @@
-require 'delegate'
+# frozen_string_literal: true
+
+require "delegate"
 
 module FilterRename
-
+  #
   # This is the class which handles the list
   # of filters.
+  #
   class FilterList
     attr_reader :filters
 
@@ -12,33 +15,32 @@ module FilterRename
     end
 
     def expand_macros!(macro)
+      @filters.each_with_index do |names, idx|
+        next unless names.keys[0] == FilterRename::MacroConfig
 
-      @filters.each_with_index do |names , i|
-
-        if FilterRename::MacroConfig == names.keys[0]
-          z = 1
-          names.values.pop.each do |n|
-            macro.get_macro(n).each do |k, v|
-              if v.nil? # Array
-                @filters.insert(i + z, k.keys[0].to_s.to_filter => k[k.keys[0]])
-              else # Hash
-                @filters.insert(i + z, k.to_s.to_filter => v)
-              end
-              z += 1
+        z = 1
+        names.values.pop.each do |n|
+          macro.get_macro(n).each do |k, v|
+            if v.nil? # Array
+              @filters.insert(idx + z, k.keys[0].to_s.to_filter => k[k.keys[0]])
+            else # Hash
+              @filters.insert(idx + z, k.to_s.to_filter => v)
             end
-            @filters[i] = nil
+            z += 1
           end
+          @filters[idx] = nil
         end
       end
 
       @filters.delete_if(&:nil?)
     end
-
   end
 
-
+  #
+  # The base class for all type of
+  # filters.
+  #
   class FilterBase < SimpleDelegator
-
     def initialize(obj, options)
       super obj
       @dest = obj # useful for macros
@@ -53,13 +55,13 @@ module FilterRename
     def set_config(name, value)
       raise InvalidFilterSetting, name unless @cfg.instance_variables.include?("@#{name}".to_sym)
 
-      @cfg.instance_variable_set ('@' + name.to_s), value
+      @cfg.instance_variable_set "@#{name}", value
     end
 
     def get_config(name)
       raise InvalidFilterSetting, name unless @cfg.instance_variables.include?("@#{name}".to_sym)
 
-      @cfg.instance_variable_get '@' + name.to_s
+      @cfg.instance_variable_get "@#{name}"
     end
 
     def filter(value)
@@ -67,11 +69,13 @@ module FilterRename
     end
 
     def set_string(value, target = nil)
+      return if value.nil?
+
       if target.nil?
         super @cfg.target, value
       else
         super target, value
-      end unless value.nil?
+      end
     end
 
     def get_string(target = nil)
@@ -96,9 +100,11 @@ module FilterRename
     end
   end
 
-
+  #
+  # Mixin module for all those filters
+  # that make use of indexes.
+  #
   module IndexedParams
-
     attr_reader :params, :params_expanded, :items
 
     def normalize_index(idx)
@@ -106,26 +112,25 @@ module FilterRename
       raise IndexOutOfRange, [idx, max_length] if idx.to_i > max_length || idx.to_i < -max_length
 
       if idx.to_i.positive?
-        idx = idx.to_i.pred  # % max_length
+        idx = idx.to_i.pred # % max_length
       elsif idx.to_i.negative?
         idx = idx.to_i + max_length # % max_length
       end
       idx.to_i
     end
 
-    def get_indexes
+    def indexes
       indexes = []
-      params_length = (indexed_params == 0) ? params.length : indexed_params
+      params_length = indexed_params.zero? ? params.length : indexed_params
 
       params[0..params_length.pred].each do |x|
         if x =~ /\.\./
-          indexes = indexes + Range.new(*(x.split('..').map { |y| normalize_index(y) })).map { |i| i }
+          indexes += Range.new(*(x.split("..").map { |y| normalize_index(y) })).map { |idx| idx }
         elsif x =~ /:/
-          indexes = indexes + x.split(':').map { |y| normalize_index(y) }
+          indexes += x.split(":").map { |y| normalize_index(y) }
         else
           indexes << normalize_index(x)
         end
-
       end
 
       indexes
@@ -146,7 +151,7 @@ module FilterRename
     def filter(params)
       @params = params
       @items = indexed_items
-      @params_expanded = get_indexes
+      @params_expanded = indexes
 
       res = loop_items
 
@@ -158,11 +163,12 @@ module FilterRename
     end
   end
 
-
+  #
+  # Base class for all the word
+  # oriented filters
+  #
   class FilterWord < FilterBase
-
     include IndexedParams
-
 
     private
 
@@ -185,11 +191,12 @@ module FilterRename
     end
   end
 
-
+  #
+  # Base class for all the number oriented
+  # filters.
+  #
   class FilterNumber < FilterBase
-
     include IndexedParams
-
 
     private
 
@@ -198,7 +205,7 @@ module FilterRename
     end
 
     def indexed_items
-      string_to_loop.get_numbers
+      string_to_loop.numbers
     end
 
     def loop_items
@@ -206,42 +213,41 @@ module FilterRename
       numbers = items.clone
 
       params_expanded.each_with_index do |idx, param_idx|
-        numbers[idx] = self.send :filtered_number, numbers[idx], param_idx.next
+        numbers[idx] = send :filtered_number, numbers[idx], param_idx.next
       end
-      str = str.map_number_with_index do |num, i|
-        numbers[i]
+      str.map_number_with_index do |_num, idx|
+        numbers[idx]
       end
-
-      str
     end
   end
 
-
+  #
+  # Base class for all the Regexp
+  # oriented filters.
+  #
   class FilterRegExp < FilterBase
-
     def filter(params)
       super loop_regex(get_string, params)
     end
 
-
     private
 
     def loop_regex(str, params)
-      str = str.gsub(Regexp.new(wrap_regex(params[0]), get_config(:ignore_case).to_boolean)) do |x|
+      str.gsub(Regexp.new(wrap_regex(params[0]), get_config(:ignore_case).to_boolean)) do |_x|
         matches = Regexp.last_match.clone
-        self.send(:filtered_regexp, matches.to_a.delete_if(&:nil?), params).to_s.gsub(/\\([0-9]+)/) { |y| matches[$1.to_i] }
+        send(:filtered_regexp, matches.to_a.delete_if(&:nil?), params).to_s.gsub(/\\([0-9]+)/) do |_y|
+          matches[::Regexp.last_match(1).to_i]
+        end
       end
-
-      str
     end
-
   end
 
-
+  #
+  # Base class for all the occurence
+  # oriented filters.
+  #
   class FilterOccurrence < FilterBase
-
     include IndexedParams
-
 
     private
 
@@ -259,14 +265,11 @@ module FilterRename
       occurences = items.clone
 
       params_expanded.each_with_index do |idx, param_idx|
-        occurences[idx] = self.send :filtered_occurrence, occurences[idx], param_idx.next
+        occurences[idx] = send :filtered_occurrence, occurences[idx], param_idx.next
       end
-      str = str.gsub(regexp).with_index do |item, i|
-        occurences[i]
+      str.gsub(regexp).with_index do |_idxtem, _i|
+        occurences[idx]
       end
-
-      str
     end
   end
-
 end

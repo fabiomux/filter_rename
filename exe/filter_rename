@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'filter_rename/cli'
+require "filter_rename/cli"
 
 FilterRename::CLI.start

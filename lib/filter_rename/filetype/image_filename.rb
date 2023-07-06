@@ -1,10 +1,13 @@
-require 'fastimage'
-require 'exiv2'
+# frozen_string_literal: true
+
+require "fastimage"
+require "exiv2"
 
 module FilterRename
-
+  #
+  # Image files tags handling.
+  #
   class ImageFilename < Filename
-
     def initialize(fname, cfg)
       super fname, cfg
 
@@ -14,15 +17,16 @@ module FilterRename
 
       [@width, @height].map(&:readonly!)
 
-      if cfg.image_metadata
-        image = Exiv2::ImageFactory.open(fname)
-        image.read_metadata
+      return unless cfg.image_metadata
 
-        image.exif_data.each do |key, value|
-          metadata_to_var!(key, value, true)
-        end unless image.exif_data.nil?
+      image = Exiv2::ImageFactory.open(fname)
+      image.read_metadata
+
+      return if image.exif_data.nil?
+
+      image.exif_data.each do |key, value|
+        metadata_to_var!(key, value, true)
       end
     end
   end
-
 end

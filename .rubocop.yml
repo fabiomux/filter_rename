@@ -1,0 +1,80 @@
+AllCops:
+  TargetRubyVersion: 2.5
+  NewCops: enable
+  SuggestExtensions: false
+
+Style/ClassVars:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Layout/LineLength:
+  Max: 120
+
+Naming/FileName:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Lint/DuplicateBranch:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: true
+  Exclude:
+  - './lib/**/cli.rb'
+  - './lib/**/filename.rb'
+  - './lib/**/utils.rb'
+
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+  - '*.gemspec'
+  - './lib/**/cli.rb'
+  - './spec/**/*'
+
+Metrics/PerceivedComplexity:
+  Enabled: true
+  Exclude:
+  - './lib/**/filter_rename.rb'
+  - './lib/**/cli.rb'
+  - './lib/**/config.rb'
+  - './lib/**/filename_factory.rb'
+  - './lib/**/filter_base.rb'
+  - './lib/**/utils.rb'
+
+Metrics/CyclomaticComplexity:
+  Enabled: true
+  Exclude:
+  - './lib/**/filter_rename.rb'
+  - './lib/**/cli.rb'
+  - './lib/**/config.rb'
+  - './lib/**/filename_factory.rb'
+  - './lib/**/filter_base.rb'
+  - './lib/**/utils.rb'
+
+Style/MixinUsage:
+  Enabled: true
+  Exclude:
+  - './spec/**/*'
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  Exclude:
+  - './bin/*'
+  - './exe/*'
+
+Style/Documentation:
+  Enabled: true
+  Exclude:
+  - './lib/**/filters.rb'

@@ -1,17 +1,20 @@
-require 'fileutils'
-require 'filter_rename/version'
-require 'filter_rename/config'
-require 'filter_rename/filter_base'
-require 'filter_rename/filters'
-require 'filter_rename/filter_pipe'
-require 'filter_rename/filename'
-require 'filter_rename/filename_factory'
-require 'filter_rename/utils'
+# frozen_string_literal: true
+
+require "fileutils"
+require "filter_rename/version"
+require "filter_rename/config"
+require "filter_rename/filter_base"
+require "filter_rename/filters"
+require "filter_rename/filter_pipe"
+require "filter_rename/filename"
+require "filter_rename/filename_factory"
+require "filter_rename/utils"
 
 module FilterRename
-
+  #
+  # Facade class for all the operations.
+  #
   class Builder
-
     def initialize(options)
       @cfg = Config.new(options.global)
       @filters = FilterList.new(options.filters)
@@ -39,7 +42,6 @@ module FilterRename
 
       Messages.label "Apply:"
       @files.each do |src|
-
         fp = FilterPipe.new(src, @filters, @cfg).apply
 
         if fp.changed?
@@ -47,8 +49,8 @@ module FilterRename
 
           if old_data[:full_filename]
             Messages.renamed!(old_data, fp.dest)
-            Messages.changed_tags(fp, old_data, false) if fp.source.class.has_writable_tags
-          elsif fp.source.class.has_writable_tags
+            Messages.changed_tags(fp, old_data, header: false) if fp.source.class.writable_tags?
+          elsif fp.source.class.writable_tags?
             Messages.changed_tags(fp, old_data)
           else
             Messages.file_exists(fp)
@@ -62,17 +64,17 @@ module FilterRename
     end
 
     def globals
-      Messages.label 'Global configurations:'
+      Messages.label "Global configurations:"
       Messages.config_list @cfg.global
     end
 
     def configs
-      Messages.label 'Filter\'s configurations:'
+      Messages.label "Filter's configurations:"
       Messages.config_list @cfg.filter
     end
 
     def words
-      Messages.label 'Groups and subgroups of words available for translation:'
+      Messages.label "Groups and subgroups of words available for translation:"
       Messages.config_multilist @cfg.words
     end
 
@@ -84,12 +86,11 @@ module FilterRename
 
       Messages.label "Dry Run:"
       @files.each do |src|
-
         fp = FilterPipe.new(src, @filters, @cfg).apply
 
         if fp.unchanged?
           Messages.skipping(fp)
-        elsif (cache.keys.include?(fp.dest.full_filename) || fp.dest.exists?)
+        elsif cache.keys.include?(fp.dest.full_filename) || fp.dest.exists?
           if fp.source.full_filename == fp.dest.full_filename
             Messages.changed_tags(fp)
           else
@@ -98,7 +99,7 @@ module FilterRename
           end
         else
           Messages.renamed(fp)
-          Messages.changed_tags(fp, {}, false) if fp.source.class.has_writable_tags
+          Messages.changed_tags(fp, {}, header: false) if fp.source.class.writable_tags?
           cache[fp.dest.full_filename] = fp.dest
         end
       end
@@ -107,9 +108,8 @@ module FilterRename
     def targets
       raise MissingFiles if @files.empty?
 
-      Messages.label 'Targets:'
+      Messages.label "Targets:"
       @files.each do |src|
-
         fname = FilenameFactory.create(src, @cfg.global)
 
         Messages.multi fname.full_filename
@@ -118,23 +118,22 @@ module FilterRename
     end
 
     def macros
-      Messages.label 'Macros:'
-      Messages.list @cfg.macro.get_macros
+      Messages.label "Macros:"
+      Messages.list @cfg.macro.macros
     end
 
     def show_macro
       Messages.label "Macro: #{@show_macro}"
       macro = @cfg.macro.get_macro(@show_macro)
-      if macro.class == Array
+      if macro.instance_of?(Array)
         macro.each do |k|
-          Messages.item k.keys.first.to_s + ': ' + k.values.first.map { |x| '"' + x.to_s.green + '"' }.join(',')
+          Messages.item "#{k.keys.first}: " + k.values.first.map { |x| "\"#{x.to_s.green}\"" }.join(",")
         end
-      elsif macro.class == Hash
+      elsif macro.instance_of?(Hash)
         macro.each do |k, v|
-          Messages.item k.to_s + ': ' +  v.map { |x| '"' + x.to_s.green + '"'  }.join(', ')
+          Messages.item "#{k}: " + v.map { |x| "\"#{x.to_s.green}\"" }.join(", ")
         end
       end
     end
   end
-
 end
