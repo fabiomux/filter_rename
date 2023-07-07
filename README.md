@@ -5,6 +5,9 @@ operations here called *filters*, which aim to replace most, if not all, the she
 usually involved in that kind of operations (*sed*, *awk*, *trim*, ...) in a more safe and
 comfortable manner.
 
+[![Ruby](https://github.com/fabiomux/filter_rename/actions/workflows/main.yml/badge.svg)][wf_main]
+[![Gem Version](https://badge.fury.io/rb/filter_rename.svg)][gem_version]
+
 ## Installation
 
 ### Rubygem
@@ -103,3 +106,5 @@ More info is available at:
 
 
 [filter_rename_wiki]: https://github.com/fabiomux/filter_rename/wiki "FilterRename wiki page on GitHub"
+[wf_main]: https://github.com/fabiomux/filter_rename/actions/workflows/main.yml
+[gem_version]: https://badge.fury.io/rb/filter_rename
