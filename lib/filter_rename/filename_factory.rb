@@ -16,11 +16,17 @@ module FilterRename
       return Filename.new(fname, cfg) if File.directory?(fname)
 
       magic = MimeMagic.by_magic(File.open(fname))
-      mediatype, type = magic.nil? ? %w[unknown unknown] : [magic.mediatype, magic.type]
+      mediatype, type, subtype = magic.nil? ? %w[unknown unknown unknown] : [magic.mediatype, magic.type, magic.subtype]
 
       if (File.read(fname, 3) == "ID3") && (mediatype == "audio")
         require "filter_rename/filetype/mp3_filename"
         res = Mp3Filename.new(fname, cfg)
+      elsif (mediatype == "audio") && (%w[flac mp4 ogg].include? subtype)
+        require "filter_rename/filetype/audio_filename"
+        res = AudioFilename.new(fname, cfg)
+      elsif (mediatype == "video") && (subtype == "ogg")
+        require "filter_rename/filetype/audio_filename"
+        res = AudioFilename.new(fname, cfg)
       elsif (mediatype == "image") && (!["vnd.djvu+multipage"].include? type.split("/")[1])
         # supported types: jpeg, png
         require "filter_rename/filetype/image_filename"
