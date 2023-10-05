@@ -41,4 +41,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "mimemagic"
   spec.add_runtime_dependency "mp3info"
   spec.add_runtime_dependency "pdf-reader"
+  spec.add_runtime_dependency "taglib-ruby"
 end
