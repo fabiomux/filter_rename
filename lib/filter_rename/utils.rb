@@ -255,11 +255,12 @@ module FilterRename
       puts "[X] ".bold.yellow + "Skipping <#{fpipe.source.filename}>, no changes!"
     end
 
+    # rubocop:disable Style/HashEachMethods
     def self.changed_tags(fpipe, old_data = {}, header: true)
       Messages.ok "<#{fpipe.source.filename}> tags changed:" if header
-      old_source = old_data.empty? ? fp.source.values : old_data
+      old_source = old_data.empty? ? fpipe.source.values : old_data
 
-      fp.dest.each_value do |k, v|
+      fpipe.dest.values.each do |k, v|
         next unless (v.to_s != old_source[k].to_s) && fpipe.source.writable?(k) && fpipe.source.custom?(k)
 
         puts "    #{k}: ".rjust(15, " ")
@@ -271,9 +272,10 @@ module FilterRename
               end) + " => ".bold.green + v.to_s
       end
     end
+    # rubocop:enable Style/HashEachMethods
 
     def self.file_exists(fpipe)
-      Messages.error "<#{fpipe.source.filename}> can't be renamed in <#{fp.dest.filename}>, it exists!"
+      Messages.error "<#{fpipe.source.filename}> can't be renamed in <#{fpipe.dest.filename}>, it exists!"
     end
 
     def self.file_hash(fpipe, hash_type, cached = nil)
