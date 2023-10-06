@@ -10,6 +10,22 @@ comfortable manner.
 
 ## Installation
 
+### Requirements
+
+These two libraries must be installed:
+- **exiv2**
+- **taglib**
+
+With *openSUSE*:
+```shell
+$ sudo zypper install libexiv2-devel libtag-devel
+```
+
+With *Debian*/*Ubuntu*:
+```shell
+$ sudo apt-get install libexiv2-dev libtag1-dev
+```
+
 ### Rubygem
 
 Install it as a regular Ruby gem with:
