@@ -16,12 +16,14 @@ RSpec.describe FilterRename do
     context "playing with words" do
       it "move first word to last" do
         res = []
+        filters = FilterRename::FilterList.new [
+          { FilterRename::Filters::Spacify => ["_"] },
+          { FilterRename::Filters::MoveWord => [1, -1] }
+        ]
         @files.each do |src|
-          src = FilterRename::FilenameFactory.create(src, @config.global)
-          FilterRename::Filters::Spacify.new(src, cfg: @config.filter).filter(["_"])
-          FilterRename::Filters::MoveWord.new(src, cfg: @config.filter).filter([1, -1])
+          fp = FilterRename::FilterPipe.new(src, filters, @config).apply
 
-          res << src.full_filename
+          res << fp.dest.full_filename
         end
 
         expect(res).to eq([
@@ -33,12 +35,14 @@ RSpec.describe FilterRename do
 
       it "move first two word to last" do
         res = []
+        filters = FilterRename::FilterList.new [
+          { FilterRename::Filters::Spacify => ["_"] },
+          { FilterRename::Filters::MoveWord => ["1..2", -1] }
+        ]
         @files.each do |src|
-          src = FilterRename::FilenameFactory.create(src, @config.global)
-          FilterRename::Filters::Spacify.new(src, cfg: @config.filter).filter(["_"])
-          FilterRename::Filters::MoveWord.new(src, cfg: @config.filter).filter(["1..2", -1])
+          fp = FilterRename::FilterPipe.new(src, filters, @config).apply
 
-          res << src.full_filename
+          res << fp.dest.full_filename
         end
 
         expect(res).to eq([
@@ -50,12 +54,14 @@ RSpec.describe FilterRename do
 
       it "append the first and third word to the end" do
         res = []
+        filters = FilterRename::FilterList.new [
+          { FilterRename::Filters::Spacify => ["_"] },
+          { FilterRename::Filters::AppendWordFrom => ["1:3", "name"] }
+        ]
         @files.each do |src|
-          src = FilterRename::FilenameFactory.create(src, @config.global)
-          FilterRename::Filters::Spacify.new(src, cfg: @config.filter).filter(["_"])
-          FilterRename::Filters::AppendWordFrom.new(src, cfg: @config.filter).filter(["1:3", "name"])
+          fp = FilterRename::FilterPipe.new(src, filters, @config).apply
 
-          res << src.full_filename
+          res << fp.dest.full_filename
         end
 
         expect(res).to eq([
