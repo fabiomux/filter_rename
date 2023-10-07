@@ -24,9 +24,6 @@ module FilterRename
       elsif (mediatype == "audio") && (%w[flac mp4 ogg].include? subtype)
         require "filter_rename/filetype/audio_filename"
         res = AudioFilename.new(fname, cfg)
-      elsif (mediatype == "video") && (subtype == "ogg")
-        require "filter_rename/filetype/audio_filename"
-        res = AudioFilename.new(fname, cfg)
       elsif (mediatype == "image") && (!["vnd.djvu+multipage"].include? type.split("/")[1])
         # supported types: jpeg, png
         require "filter_rename/filetype/image_filename"
