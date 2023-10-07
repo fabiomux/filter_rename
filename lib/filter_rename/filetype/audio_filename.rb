@@ -27,7 +27,7 @@ module FilterRename
     def rename!(dest)
       old_data = super dest
 
-      Taglib::FileRef.open(full_filename) do |audio|
+      TagLib::FileRef.open(full_filename) do |audio|
         old_data.merge!({ title: audio.tag.title, artist: audio.tag.artist, album: audio.tag.album,
                           track: audio.tag.track, comment: audio.tag.comment, year: audio.tag.year,
                           genre: audio.tag.genre })
@@ -39,6 +39,8 @@ module FilterRename
         audio.tag.comment = dest.get_string(:comment).to_s
         audio.tag.year = dest.get_string(:year)
         audio.tag.genre = dest.get_string(:genre)
+
+        audio.save
       end
 
       load_audio_data(full_filename)
@@ -72,7 +74,9 @@ module FilterRename
 
       # read only stuff
       @duration = audioinfo.audio_properties.length_in_seconds.to_s
-      @hduration = "%dh%dm%2ds".format [@duration.to_i / 3600, @duration.to_i / 60 % 60, @duration.to_i % 60]
+      @hduration = format "%<h>dh%<m>dm%<s>2ds", { h: @duration.to_i / 3600,
+                                                   m: @duration.to_i / 60 % 60,
+                                                   s: @duration.to_i % 60 }
       @samplerate = audioinfo.audio_properties.sample_rate.to_s
       @bitrate = audioinfo.audio_properties.bitrate.to_s
 
