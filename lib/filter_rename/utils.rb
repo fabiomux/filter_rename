@@ -256,7 +256,8 @@ module FilterRename
     end
 
     # rubocop:disable Style/HashEachMethods
-    def self.changed_tags(fpipe, old_data = {}, header: true)
+    # rubocop:disable Style/OptionalBooleanParameter
+    def self.changed_tags(fpipe, old_data = {}, header = true)
       Messages.ok "<#{fpipe.source.filename}> tags changed:" if header
       old_source = old_data.empty? ? fpipe.source.values : old_data
 
@@ -273,6 +274,7 @@ module FilterRename
       end
     end
     # rubocop:enable Style/HashEachMethods
+    # rubocop:enable Style/OptionalBooleanParameter
 
     def self.file_exists(fpipe)
       Messages.error "<#{fpipe.source.filename}> can't be renamed in <#{fpipe.dest.filename}>, it exists!"

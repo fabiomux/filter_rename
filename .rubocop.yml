@@ -52,6 +52,7 @@ Metrics/PerceivedComplexity:
   - './lib/**/filename_factory.rb'
   - './lib/**/filter_base.rb'
   - './lib/**/utils.rb'
+  - './lib/**/audio_filename.rb'
 
 Metrics/CyclomaticComplexity:
   Enabled: true
@@ -62,6 +63,7 @@ Metrics/CyclomaticComplexity:
   - './lib/**/filename_factory.rb'
   - './lib/**/filter_base.rb'
   - './lib/**/utils.rb'
+  - './lib/**/audio_filename.rb'
 
 Style/MixinUsage:
   Enabled: true
