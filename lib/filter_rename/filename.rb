@@ -152,7 +152,7 @@ module FilterRename
 
       [@count, @ctime, @mtime, @size, @pretty_size].map(&:readonly!)
 
-      [@ext, @name, @path, @folder, @path, @count, @ctime, @size, @pretty_size].map(&:basic!)
+      [@ext, @name, @path, @folder, @path, @count, @ctime, @size, @pretty_size, @original].map(&:basic!)
 
       metatag_to_var!("hash", calculate_hash(@cfg.hash_type), readonly: true) if @cfg.hash_on_tags
     end
