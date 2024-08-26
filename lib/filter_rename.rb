@@ -117,6 +117,18 @@ module FilterRename
       end
     end
 
+    def values
+      raise MissingFiles if @files.empty?
+
+      Messages.label "Target values:"
+      @files.each do |src|
+        fname = FilenameFactory.create(src, @cfg.global)
+
+        Messages.multi fname.full_filename
+        Messages.target_values(fname)
+      end
+    end
+
     def macros
       Messages.label "Macros:"
       Messages.list @cfg.macro.macros

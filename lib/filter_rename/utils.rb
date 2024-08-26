@@ -307,6 +307,13 @@ module FilterRename
       puts ""
     end
 
+    def self.target_values(ffilters)
+      values = ffilters.values
+
+      list ffilters.targets[:readonly].map { |s| "#{s}: #{values[s]}" }, :red, "-"
+      list ffilters.targets[:writable].map { |s| "#{s}: #{values[s]}" }, :green, "+"
+    end
+
     def self.item(idx, color = :green, char = ">")
       puts "[#{char}] ".bold.send(color) + idx
     end

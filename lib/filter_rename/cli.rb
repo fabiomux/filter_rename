@@ -41,6 +41,10 @@ module FilterRename
           options.operation = :targets
         end
 
+        opt.on("-v", "--values", "List of targets values for each file") do |_c|
+          options.operation = :values
+        end
+
         opt.on("-g", "--globals", "List of global variables") do |_c|
           options.operation = :globals
         end
@@ -114,7 +118,7 @@ module FilterRename
 
         opt_parser.parse!(ARGV)
 
-        if %i[apply preview dry_run targets].include? options.operation
+        if %i[apply preview dry_run targets values].include? options.operation
           (ARGV.empty? ? ARGF : ARGV).each do |f|
             f = File.expand_path(f.chomp)
 

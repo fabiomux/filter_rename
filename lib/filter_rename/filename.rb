@@ -102,7 +102,7 @@ module FilterRename
       instance_variables.each do |v|
         next if v == :@cfg
 
-        res[instance_variable_get(v).writable? ? :writable : :readonly] << v
+        res[instance_variable_get(v).writable? ? :writable : :readonly] << v.to_s.delete("@").to_sym
       end
 
       res
