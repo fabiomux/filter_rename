@@ -440,7 +440,7 @@ module FilterRename
 
     class JoinNumbers < FilterNumber
       def self.hint
-        "Join the words NTH1 and NTH2 and replace the NTH3 number with it"
+        "Join the numbers NTH1 and NTH2 and replace the NTH3 number with it"
       end
 
       def self.params
