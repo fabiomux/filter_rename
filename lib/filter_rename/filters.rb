@@ -1086,7 +1086,7 @@ module FilterRename
       end
     end
 
-    class WrapWords < FilterWord
+    class WrapWord < FilterWord
       def self.hint
         "Wrap the NTH word with SEPARATOR1 and SEPARATOR2"
       end
