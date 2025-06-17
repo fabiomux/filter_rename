@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
     "bug_tracker_uri" => "https://github.com/fabiomux/filter_rename/issues",
     "homepage_uri" => "https://freeaptitude.altervista.org/projects/filter-rename.html",
     "source_code_uri" => "https://github.com/fabiomux/filter_rename",
-    "changelog_uri" => "https://freeaptitude.altervista.org/projects/filter-rename.htm#changelog",
+    "changelog_uri" => "https://freeaptitude.altervista.org/projects/filter-rename.html#changelog",
     "wiki_uri" => "https://github.com/fabiomux/filter_rename/wiki",
     "rubygems_mfa_required" => "true"
   }
