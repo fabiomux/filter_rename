@@ -9,6 +9,7 @@
   :targets: :short
   :pdf_metadata: false
   :image_metadata: false
+  :mimemagic: false
 :filter:
   :lang: :en
   :word_separator: " "

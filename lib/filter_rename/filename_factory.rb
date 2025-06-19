@@ -13,7 +13,7 @@ module FilterRename
   #
   class FilenameFactory
     def self.create(fname, cfg)
-      return Filename.new(fname, cfg) if File.directory?(fname)
+      return Filename.new(fname, cfg) if File.directory?(fname) || !cfg.mimemagic
 
       magic = MimeMagic.by_magic(File.open(fname))
       mediatype, type, subtype = magic.nil? ? %w[unknown unknown unknown] : [magic.mediatype, magic.type, magic.subtype]

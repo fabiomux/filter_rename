@@ -18,7 +18,7 @@ module FilterRename
     def initialize(options)
       @cfg = Config.new(options.global)
       @filters = FilterList.new(options.filters)
-      @files = options.files
+      @files = options.files.to_a
       @show_macro = options.show_macro
     end
 
