@@ -115,18 +115,8 @@ module FilterRename
       end
 
       if (!$stdin.tty? && !$stdin.closed?) || !ARGV.empty?
-
         opt_parser.parse!(ARGV)
-
-        if %i[apply preview dry_run targets values].include? options.operation
-          (ARGV.empty? ? ARGF : ARGV).each do |f|
-            f = File.expand_path(f.chomp)
-
-            raise FileNotFound, f unless File.exist?(f)
-
-            options.files << f
-          end
-        end
+        options.files = (ARGV.empty? ? ARGF : ARGV)
       else
         puts opt_parser
         exit

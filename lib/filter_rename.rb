@@ -23,6 +23,7 @@ module FilterRename
     end
 
     def preview
+      expand_files!
       raise MissingFiles if @files.empty?
 
       @filters.expand_macros!(@cfg.macro)
@@ -36,6 +37,7 @@ module FilterRename
     end
 
     def apply
+      expand_files!
       raise MissingFiles if @files.empty?
 
       @filters.expand_macros!(@cfg.macro)
@@ -79,6 +81,7 @@ module FilterRename
     end
 
     def dry_run
+      expand_files!
       raise MissingFiles if @files.empty?
 
       @filters.expand_macros!(@cfg.macro)
@@ -106,6 +109,7 @@ module FilterRename
     end
 
     def targets
+      expand_files!
       raise MissingFiles if @files.empty?
 
       Messages.label "Targets:"
@@ -118,6 +122,7 @@ module FilterRename
     end
 
     def values
+      expand_files!
       raise MissingFiles if @files.empty?
 
       Messages.label "Target values:"
@@ -145,6 +150,17 @@ module FilterRename
         macro.each do |k, v|
           Messages.item "#{k}: " + v.map { |x| "\"#{x.to_s.green}\"" }.join(", ")
         end
+      end
+    end
+
+    private
+
+    def expand_files!
+      @files = @files.map do |f|
+        f = File.expand_path(f.chomp)
+        raise FileNotFound, f unless File.exist?(f)
+
+        f
       end
     end
   end
