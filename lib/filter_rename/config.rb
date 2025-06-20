@@ -61,7 +61,7 @@ module FilterRename
   #
   class GlobalConfig
     attr_reader :date_format, :hash_type, :hash_on_tags, :hash_if_exists, :counter_length, :counter_start, :targets,
-                :pdf_metadata, :image_metadata, :mp3_metadata, :mimemagic, :essential_tags
+                :pdf_metadata, :image_metadata, :mp3_metadata, :mimemagic, :essential_tags, :check_source
 
     def initialize(cfg)
       @date_format = cfg[:date_format] || "%Y-%m-%d"
@@ -76,6 +76,7 @@ module FilterRename
       @mp3_metadata = cfg[:mp3_metadata].nil? ? true : cfg[:mp3_metadata].to_boolean
       @mimemagic = cfg[:mimemagic].nil? ? true : cfg[:mimemagic].to_boolean
       @essential_tags = cfg[:essential_tags].nil? ? true : cfg[:essential_tags].to_boolean
+      @check_source = cfg[:check_source].nil? ? true : cfg[:check_source].to_boolean
     end
   end
 

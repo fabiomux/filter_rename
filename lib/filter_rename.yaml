@@ -11,6 +11,7 @@
   :image_metadata: false
   :mimemagic: false
   :essential_tags: false
+  :check_source: true
 :filter:
   :lang: :en
   :word_separator: " "

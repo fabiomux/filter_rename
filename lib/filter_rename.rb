@@ -158,7 +158,7 @@ module FilterRename
     def expand_files!
       @files = @files.map do |f|
         f = File.expand_path(f.chomp)
-        raise FileNotFound, f unless File.exist?(f)
+        raise FileNotFound, f if @cfg.global.check_source && !File.exist?(f)
 
         f
       end
