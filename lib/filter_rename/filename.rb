@@ -145,16 +145,22 @@ module FilterRename
 
       # read only stuff
       @count = @@count.to_s.rjust(@cfg.counter_length.to_i, "0")
-      @ctime = File.ctime(fname).strftime(@cfg.date_format)
-      @mtime = File.mtime(fname).strftime(@cfg.date_format)
-      @size = File.size(fname).to_s
-      @pretty_size = pretty_size(@size)
 
-      [@count, @ctime, @mtime, @size, @pretty_size].map(&:readonly!)
+      if @cfg.essential_tags
+        @count.readonly!
+        [@ext, @name, @path, @folder, @path, @count, @original].map(&:basic!)
+      else
+        @ctime = File.ctime(fname).strftime(@cfg.date_format)
+        @mtime = File.mtime(fname).strftime(@cfg.date_format)
+        @size = File.size(fname).to_s
+        @pretty_size = pretty_size(@size)
 
-      [@ext, @name, @path, @folder, @path, @count, @ctime, @size, @pretty_size, @original].map(&:basic!)
+        [@count, @ctime, @mtime, @size, @pretty_size].map(&:readonly!)
 
-      metatag_to_var!("hash", calculate_hash(@cfg.hash_type), readonly: true) if @cfg.hash_on_tags
+        [@ext, @name, @path, @folder, @path, @count, @ctime, @size, @pretty_size, @original].map(&:basic!)
+
+        metatag_to_var!("hash", calculate_hash(@cfg.hash_type), readonly: true) if @cfg.hash_on_tags
+      end
     end
   end
 end

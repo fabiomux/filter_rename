@@ -10,6 +10,7 @@
   :pdf_metadata: false
   :image_metadata: false
   :mimemagic: false
+  :essential_tags: false
 :filter:
   :lang: :en
   :word_separator: " "
