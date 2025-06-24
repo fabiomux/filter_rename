@@ -1007,13 +1007,13 @@ module FilterRename
       end
     end
 
-    class TranslateWords < FilterBase
+    class Translate < FilterBase
       def self.hint
-        "Replace words in GROUP from SUBGRPS to SUBGRPD"
+        "Replace text in GROUP from SUBGRPSRC to SUBGRPDST"
       end
 
       def self.params
-        "GROUP,SUBGRPS,SUBGRPD"
+        "GROUP,SUBGRPSRC,SUBGRPDST"
       end
 
       def filter(params)

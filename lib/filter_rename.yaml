@@ -77,32 +77,32 @@
       :squeeze:
       - ' '
     -
-      :translate_words:
+      :translate:
       - :long_months
       - :it
       - :en
     -
-      :translate_words:
+      :translate:
       - :long_months
       - :es
       - :en
     -
-      :translate_words:
+      :translate:
       - :long_months
       - :fr
       - :en
     -
-      :translate_words:
+      :translate:
       - :long_months
       - :de
       - :en
     -
-      :translate_words:
+      :translate:
       - :long_months
       - :hr
       - :en
     -
-      :translate_words:
+      :translate:
       - :long_months
       - :pt
       - :en
