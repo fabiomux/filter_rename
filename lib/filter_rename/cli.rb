@@ -75,7 +75,7 @@ module FilterRename
           end
         end
 
-        opt.on("-u", "--virtual", "Accept a list of file not present in the current drive") do |_c|
+        opt.on("--virtual", "Accept a list of file not present in the local drives") do |_c|
           options.global.store(:mimemagic, false)
           options.global.store(:essential_tags, true)
           options.global.store(:check_source, false)
