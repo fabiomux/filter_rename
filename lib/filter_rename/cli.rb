@@ -15,7 +15,7 @@ module FilterRename
       options.filters = []
       options.files = []
       options.global = {}
-      options.operation = :preview
+      options.operation = :diff
       options.show_macro = ""
 
       opt_parser = OptionParser.new do |opt|
@@ -33,8 +33,8 @@ module FilterRename
           options.operation = :dry_run
         end
 
-        opt.on("-p", "--preview", "Preview the filter chain applied [DEFAULT]") do |_c|
-          options.operation = :preview
+        opt.on("-D", "--diff", "View the changes in a diff format [DEFAULT]") do |_c|
+          options.operation = :diff
         end
 
         opt.on("-t", "--targets", "List of targets for each file") do |_c|

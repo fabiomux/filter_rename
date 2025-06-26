@@ -22,13 +22,13 @@ module FilterRename
       @show_macro = options.show_macro
     end
 
-    def preview
+    def diff
       expand_files!
       raise MissingFiles if @files.empty?
 
       @filters.expand_macros!(@cfg.macro)
 
-      Messages.label "Preview:"
+      Messages.label "Diff:"
 
       @files.each do |src|
         fp = FilterPipe.new(src, @filters, @cfg).apply

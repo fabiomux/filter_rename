@@ -101,7 +101,7 @@ The result is:
 
 If you are wondering why all the commands above didn't affected the files physically on the disk,
 then must be aware of the three main operations contemplated:
-- *preview*: shows the results verbosly without making any change (default);
+- *diff*: shows the results verbosly without making any change (default);
 - *dry-run*: executes a simulation warning also for renaming conflicts;
 - *apply*: confirm the changes and rename the files unless the destination file exists.
 
