@@ -151,7 +151,7 @@ module FilterRename
     end
 
     def to_boolean
-      self == "true"
+      %w[1 true].include? downcase
     end
 
     def to_filter
