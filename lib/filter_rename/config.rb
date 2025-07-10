@@ -67,15 +67,15 @@ module FilterRename
       @date_format = cfg[:date_format] || "%Y-%m-%d"
       @hash_type = cfg[:hash_type].to_sym || :md5
       @hash_on_tags = cfg[:hash_on_tags] || false
-      @hash_if_exists = cfg[:hash_if_exists] || false
-      @counter_length = cfg[:counter_length] || 4
+      @hash_if_exists = cfg[:hash_if_exists] || true
+      @counter_length = cfg[:counter_length] || 3
       @counter_start = cfg[:counter_start] || 0
       @targets = cfg[:targets].to_sym || :short
       @pdf_metadata = cfg[:pdf_metadata].nil? ? true : cfg[:pdf_metadata].to_boolean
       @image_metadata = cfg[:image_metadata].nil? ? true : cfg[:image_metadata].to_boolean
       @mp3_metadata = cfg[:mp3_metadata].nil? ? true : cfg[:mp3_metadata].to_boolean
       @mimemagic = cfg[:mimemagic].nil? ? true : cfg[:mimemagic].to_boolean
-      @essential_tags = cfg[:essential_tags].nil? ? true : cfg[:essential_tags].to_boolean
+      @essential_tags = cfg[:essential_tags].nil? ? false : cfg[:essential_tags].to_boolean
       @check_source = cfg[:check_source].nil? ? true : cfg[:check_source].to_boolean
     end
   end
@@ -96,9 +96,9 @@ module FilterRename
       @lang = (cfg[:lang] || :en).to_sym
       @macro = cfg[:macro] || {}
       @grep = cfg[:grep] || ".*"
-      @grep_on = cfg[:grep_on].to_sym || :source
-      @grep_exclude = cfg[:grep_exclude].to_boolean || false
-      @grep_target = cfg[:grep_target].to_sym || :full_filename
+      @grep_on_dest = cfg[:grep_on_dest].nil? ? false : cfg[:grep_on_dest].to_boolean
+      @grep_exclude = cfg[:grep_exclude].nil? ? false : cfg[:grep_exclude].to_boolean
+      @grep_target = (cfg[:grep_target] || :full_filename).to_sym
     end
   end
 

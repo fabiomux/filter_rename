@@ -7,9 +7,10 @@
   :counter_length: 3
   :counter_start: 0
   :targets: :short
-  :pdf_metadata: false
-  :image_metadata: false
-  :mimemagic: false
+  :pdf_metadata: true
+  :image_metadata: true
+  :mp3_metadata: true
+  :mimemagic: true
   :essential_tags: false
   :check_source: true
 :filter:
@@ -20,7 +21,7 @@
   :target: :name
   :ignore_case: true
   :grep: '.*'
-  :grep_on: :source
+  :grep_on_dest: false
   :grep_exclude: false
   # full_filename, :full_path, :filename, <target>
   :grep_target: :full_filename

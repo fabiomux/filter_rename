@@ -52,12 +52,13 @@ module FilterRename
     private
 
     def skip?
+      grep_on = @cfg.grep_on_dest ? :dest : :source
       unmatched = if %i[full_filename full_path filename].include? @cfg.grep_target.to_sym
-                    instance_variable_get("@#{@cfg.grep_on}")
+                    instance_variable_get("@#{grep_on}")
                       .send(@cfg.grep_target.to_sym)
                       .match(Regexp.new(@cfg.grep)).nil?
                   else
-                    instance_variable_get("@#{@cfg.grep_on}")
+                    instance_variable_get("@#{grep_on}")
                       .get_string(@cfg.grep_target)
                       .match(Regexp.new(@cfg.grep)).nil?
                   end
