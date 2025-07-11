@@ -20,7 +20,7 @@ module FilterRename
 
       opt_parser = OptionParser.new do |opt|
         opt.banner = "Usage: filter_rename [-g OPTION1[,OPTION2...]] [FILTER1[,FILTER2...]] <file1>" \
-                     "[ <file2>...] [OPERATION]"
+                     "[ <file2>...] OPERATION"
 
         opt.separator ""
         opt.separator "Operations:"
@@ -69,7 +69,7 @@ module FilterRename
         opt.separator ""
         opt.separator "Options:"
 
-        opt.on("--global [OPTION:VALUE[,OPTION:VALUE]]", 'Override global options with: "option:value"') do |v|
+        opt.on("--global OPTION:VALUE[,OPTION:VALUE]", 'Override global options with: "option:value"') do |v|
           v.parametrize.each do |idx|
             options.global.store(idx.split(":")[0].to_sym, idx.split(":")[1])
           end
@@ -79,6 +79,38 @@ module FilterRename
           options.global.store(:mimemagic, false)
           options.global.store(:essential_tags, true)
           options.global.store(:check_source, false)
+        end
+
+        opt.separator ""
+        opt.separator "Global options extended:"
+
+        GlobalConfig::OPTIONS.each do |k, v|
+          if v[:args].nil?
+            opt.on("--G-[no-]#{k.to_s.gsub(/_/, "-")}", v[:desc]) do |c|
+              options.global.store(k, c)
+            end
+          else
+            opt.on("--G-#{k.to_s.gsub(/_/, "-")} #{v[:args]}", String, v[:desc]) do |c|
+              options.global.store(k, c)
+            end
+          end
+        end
+
+        opt.separator ""
+        opt.separator "Filter options extended:"
+
+        FilterConfig::OPTIONS.each do |k, v|
+          klass = Object.const_get("FilterRename::Filters::Config")
+
+          if v[:args].nil?
+            opt.on("--F-[no-]#{k.to_s.gsub(/_/, "-")}", v[:desc]) do |c|
+              options.filters << { klass => ["#{k}:#{c}"] }
+            end
+          else
+            opt.on("--F-#{k.to_s.gsub(/_/, "-")} #{v[:args]}", String, v[:desc]) do |c|
+              options.filters << { klass => ["#{k}:#{c}"] }
+            end
+          end
         end
 
         opt.separator ""
