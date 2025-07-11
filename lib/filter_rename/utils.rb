@@ -333,6 +333,13 @@ module FilterRename
         Messages.item("#{k.to_s.gsub(/@/, "")}: [#{items.instance_variable_get(k).keys.join(", ")}]", color, char)
       end
     end
+
+    def self.help_option(name, data)
+      puts "OPTION:\n  #{name}"
+      puts "\nDEFAULT VALUE:\n  #{data[:default] == " " ? "(SPACE)" : data[:default]}"
+      puts "\nDESCRIPTION:\n#{data[:long].split(/\n/).map { |l| "  #{l}" }.join("\n")}"
+      puts ""
+    end
   end
 
   #
@@ -350,6 +357,15 @@ module FilterRename
   class UnknownHashCode < StandardError
     def initialize(hash_type)
       super "Invalid hash type: #{hash_type}"
+    end
+  end
+
+  #
+  # Invalid option as argument.
+  #
+  class InvalidOption < StandardError
+    def initialize(option)
+      super "The option #{option} doesn't exist"
     end
   end
 

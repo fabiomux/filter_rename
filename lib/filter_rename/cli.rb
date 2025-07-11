@@ -146,6 +146,28 @@ module FilterRename
           puts opt
           exit
         end
+
+        opt.on_tail("--help-config [G-OPTION|F-OPTION]", String,
+                    "Extended description for the available options") do |o|
+          name = o.downcase.gsub(/-/, "_").gsub(/^--/, "")
+
+          if name =~ /^g_/
+            name = name.gsub(/^g_/, "")
+            o = GlobalConfig::OPTIONS[name.to_sym]
+          elsif o =~ /^f_/
+            name = name.gsub(/^f_/, "")
+            o = FilterConfig::OPTIONS[name.to_sym]
+          elsif FilterConfig::OPTIONS.key?(name.to_sym)
+            o = FilterConfig::OPTIONS[name.to_sym]
+          elsif GlobalConfig::OPTIONS.key?(name.to_sym)
+            o = GlobalConfig::OPTIONS[name.to_sym]
+          else
+            raise InvalidOption, name
+          end
+          Messages.help_option(name, o)
+          exit
+        end
+
         opt.on_tail("-v", "--version", "Show version") do
           puts VERSION
           exit
