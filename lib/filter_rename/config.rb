@@ -70,7 +70,7 @@ module FilterRename
                                default: "%Y-%m-%d" },
                 hash_type: { args: "ALGORITHM",
                              desc: "Use one of the ALGORITHM among sha1, sha2, md5 to create the <hash> target.",
-                             long: "It preload the <hash> target with one of the allowed value\n" \
+                             long: "It preloads the <hash> target with one of the allowed value\n" \
                                    "sha1, sha2, or md5.\n" \
                                    "Just as reminder, md5 is the less safe but the quicker to be\n" \
                                    "executed, sha2 is the slowest but the safest.",
@@ -81,30 +81,32 @@ module FilterRename
                                       "by default and the <hash> target is not created.",
                                 default: false },
                 hash_if_exists: { args: nil,
-                                  desc: "Prints or not the hash in case the file exists.",
+                                  desc: "Prints the hash code in case the file exists.",
                                   long: "This option shows the hash of the two files when the *dry* or\n" \
-                                        "*apply* operation is triggered and a conflict is raised.\n" \
+                                        "*apply* operation is running and a conflict is raised.\n" \
                                         "Looking at the hash code would be easier to understand wheter or\n" \
                                         "not the renaming failure is caused by two clones or two totally\n" \
-                                        "different files that the filters transformed in the same file.",
+                                        "different files that the chain of filters accidentally transformed\n" \
+                                        "in the same filename.",
                                   default: true },
                 counter_length: { args: "NUMBER",
                                   desc: "The minimum length of the counter padded by zeros.",
-                                  long: "This is the length of the counter in terms of NUMBER of total\n" \
-                                        "chars, it means that, when the counter lenght is less than NUMBER\n" \
-                                        "a certain number of '0' is prepended.",
+                                  long: "This is the length of the counter in terms of total NUMBER of\n" \
+                                        "chars rendered.\n" \
+                                        "It means that, when the counter length is less than NUMBER, a certain\n" \
+                                        "number of '0' is prepended to the counter to cover the difference.",
                                   default: "3" },
                 counter_start: { args: "NUMBER",
-                                 desc: "Starts the counter from NUMBER+1 in place of the default.",
-                                 long: "This is the way to set the initial counter that affect the\n" \
-                                       "<count> target.\n" \
-                                       "Be aware that will start from NUMBER+1 for implementation reasons,\n" \
-                                       "so to have as 0 the first element just set NUMBER to -1",
+                                 desc: "Start the <count> target from NUMBER+1.",
+                                 long: "This is the way to set the internal counter, that affect the <count>\n" \
+                                       "target, to a specific position.\n" \
+                                       "Be aware that, for technical reasons, it will start from NUMBER+1,\n" \
+                                       "so to have 0 for the first element just set NUMBER to -1",
                                  default: "0" },
                 targets: { args: "FORMAT",
                            desc: "Print the targets as a *short* one-line or a *long* one-column list.",
                            long: "This option is to show or not a more compact list of the available\n" \
-                                 "targets for the given file(s).\n" \
+                                 "targets for the given files.\n" \
                                  "The allowed values are *short* or *long*.",
                            default: "short" },
                 pdf_metadata: { args: nil,
@@ -169,65 +171,70 @@ module FilterRename
   class FilterConfig
     OPTIONS = { word_separator: { args: "CHARACTER",
                                   desc: "Define the CHARACTER that separates two words.",
-                                  long: "This options affects the way a string is split in words,\n" \
-                                        "and all the filters that operate with words will use this CHARACTER\n" \
-                                        "to define the sequence of the word itself which can contain all characters\n" \
-                                        "except CHARACTER.",
+                                  long: "This options affects the way a string is split in words or how the\n" \
+                                        "words are joined together.\n" \
+                                        "All the filters that operate with words will use this CHARACTER\n" \
+                                        "to define the sequence of the word itself which can contain all\n" \
+                                        "characters except CHARACTER.",
                                   default: " " },
                 number_separator: { args: "CHARACTER",
-                                    desc: "Define the CHARACTER that joins two or more numbers.",
-                                    long: "This option configure the CHARACTER that will join\n" \
-                                          "two or more numbers in the swap-number filter when an interval\n" \
-                                          "is used as first parameter.",
+                                    desc: "Define the CHARACTER to join two or more numbers.",
+                                    long: "This option configure the CHARACTER that will join two or more\n" \
+                                          "numbers in the swap-number filter when an interval is used as\n" \
+                                          "first parameter.",
                                     default: "." },
                 # This one is unused
                 # occurrence_separator: { args: "CHARACTER"
                 #                         default: "-" },
                 target: { args: "TARGET",
-                          desc: "This is the TARGET name where the filters are operating",
+                          desc: "This is the TARGET name where the filters are operating.",
                           long: "Switching to one of the available targets allows to alter their content\n" \
                                 "directly using a chain of filters.\n" \
-                                "Targets can be read-write or read-only, the former reflect data that will\n" \
-                                "be write back to the file.\n" \
-                                "Also custom targets can be defined just to hold text temporarily that can\n" \
-                                "be transfered later to other targets.\n" \
+                                "Targets can be read-write or read-only: the former type reflects the data\n" \
+                                "that will be write back to the file, the latter can be used to generate\n" \
+                                "other values or be emedded in other targets using the *--template* filter.\n" \
+                                "Also custom targets can be defined just to hold data that could be manipulated\n" \
+                                "easier.\n" \
                                 "This option is the same as using the *--select* filter",
                           default: "name" },
                 ignore_case: { args: nil,
-                               desc: "Ignore or not the character case when searching for strings",
+                               desc: "Ignore or not the character case when searching for strings.",
                                long: "This option allows to ignore the case during the search and replace\n" \
-                                     "operations, doesn't matter which type of filter is involved",
+                                     "operations, doesn't matter which type of filter is involved.",
                                default: true },
                 lang: { args: "LANG",
-                        desc: "Set the default LANG code for the replace-date filter.",
-                        long: "This option is used by the replace-date filter to translate groups\n" \
-                              "of words containing the months or day of weeks from a language to another",
+                        desc: "Set the default LANG code for the *--replace-date* filter.",
+                        long: "This option is used by the *--replace-date* filter to translate groups\n" \
+                              "of words containing the months or day of weeks from a language to another\n" \
+                              "where it's not specified.",
                         default: "en" },
                 grep: { args: "REGEXP",
-                        desc: "Limit the file scope to only those matching the REGEXP pattern.",
-                        long: "This options include or exclude from the following filters those\n" \
-                              "files matching the REGEXP pattern",
+                        desc: "Limit the file to be changed to only those matching the REGEXP pattern.",
+                        long: "This options by default includes from the following filters only those files\n" \
+                              "matching the REGEXP pattern.\n" \
+                              "Depending on the *grep_exclude* option the logic can be inverted and the files\n" \
+                              "matching the REGEXP excluded from the action of the following filters.",
                         default: ".*" },
                 grep_on_dest: { args: nil,
-                                desc: "Exec the grep option on the destination in place of the source filename",
+                                desc: "Execute the *grep* option on the destination filename.",
                                 long: "To limit the files to be involved in the changes you can apply the\n" \
                                       "grep option on the source or destination filename.\n" \
                                       "By default it is executed on the source, while this option allows\n" \
-                                      "to select the destination filename.\n" \
+                                      "to select the destination.\n" \
                                       "Be aware that the destination changes according to all the previous\n" \
                                       "filters applied.",
                                 default: false },
                 grep_exclude: { args: nil,
                                 desc: "Invert the logic to exclude the files matching the regular expression.",
-                                long: "With this option the grep options will be used to exclude the files\n" \
-                                      "matching the regular expression, from the next filters.",
+                                long: "With this option the *grep* options will be used to exclude the files\n" \
+                                      "matching the regular expression, from the following chain of filters.",
                                 default: false },
                 grep_target: { args: "TARGET",
-                               desc: "Use the specific TARGET to execute the grep match.",
-                               long: "With this option you can limit the matching to only one of the available\n" \
+                               desc: "Use the specific TARGET to match files through the *grep* option.",
+                               long: "With this option you can limit the *grep* option to one of the available\n" \
                                      "TARGETs instead of considering the full filename.\n" \
-                                     "So, for example, it comes in handy to skip the full path from the\n" \
-                                     "process or consider only the file name or folder.",
+                                     "It comes in handy to focus on specific data contained within a TARGET\n" \
+                                     "and the file selection process is exclusively based on that data.",
                                default: "full_filename" } }.freeze
 
     attr_accessor(*OPTIONS.keys)
