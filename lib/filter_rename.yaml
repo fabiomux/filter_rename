@@ -9,7 +9,7 @@
   :targets: :short
   :pdf_metadata: true
   :image_metadata: true
-  :mp3_metadata: true
+  :audio_metadata: true
   :mimemagic: true
   :essential_tags: false
   :check_source: true

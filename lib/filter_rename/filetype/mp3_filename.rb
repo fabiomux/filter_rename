@@ -14,7 +14,7 @@ module FilterRename
     def initialize(fname, cfg)
       super fname, cfg
 
-      load_mp3_data(fname)
+      load_mp3_data(fname) if cfg.audio_metadata
     end
 
     def ==(other)

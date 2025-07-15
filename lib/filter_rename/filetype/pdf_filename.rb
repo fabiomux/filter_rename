@@ -10,8 +10,12 @@ module FilterRename
     def initialize(fname, cfg)
       super fname, cfg
 
-      return unless cfg.pdf_metadata
+      load_pdf_data(fname) if cfg.pdf_metadata
+    end
 
+    private
+
+    def load_pdf_data(fname)
       pdfinfo = PDF::Reader.new(fname)
 
       @page_count = pdfinfo.page_count.to_s

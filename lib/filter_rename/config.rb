@@ -119,11 +119,11 @@ module FilterRename
                                   long: "This option enable the generation of targets from the metadata\n" \
                                         "embedded in the supported image files.",
                                   default: true },
-                mp3_metadata: { args: nil,
-                                desc: "Create the targets from the mp3 files metadata.",
-                                long: "This option enable the generation of targets from the metadata\n" \
-                                      "embedded in the mp3 files.",
-                                default: "true" },
+                audio_metadata: { args: nil,
+                                  desc: "Create the targets from the audio files metadata.",
+                                  long: "This option enable the generation of targets from the metadata\n" \
+                                        "embedded in the supported audio files.",
+                                  default: "true" },
                 mimemagic: { args: nil,
                              desc: "Create the extra targets depending from the file's mimetype.",
                              long: "Disabling it, disable all the extra targets' calculation\n" \
@@ -158,7 +158,7 @@ module FilterRename
       @targets = cfg[:targets].to_sym || :short
       @pdf_metadata = cfg[:pdf_metadata].nil? ? true : cfg[:pdf_metadata].to_boolean
       @image_metadata = cfg[:image_metadata].nil? ? true : cfg[:image_metadata].to_boolean
-      @mp3_metadata = cfg[:mp3_metadata].nil? ? true : cfg[:mp3_metadata].to_boolean
+      @audio_metadata = cfg[:audio_metadata].nil? ? true : cfg[:audio_metadata].to_boolean
       @mimemagic = cfg[:mimemagic].nil? ? true : cfg[:mimemagic].to_boolean
       @essential_tags = cfg[:essential_tags].nil? ? false : cfg[:essential_tags].to_boolean
       @check_source = cfg[:check_source].nil? ? true : cfg[:check_source].to_boolean

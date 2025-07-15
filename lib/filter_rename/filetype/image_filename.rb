@@ -17,8 +17,10 @@ module FilterRename
 
       [@width, @height].map(&:readonly!)
 
-      return unless cfg.image_metadata
+      load_image_data(fname) if cfg.image_metadata
+    end
 
+    def load_image_data(fname)
       image = Exiv2::ImageFactory.open(fname)
       image.read_metadata
 
