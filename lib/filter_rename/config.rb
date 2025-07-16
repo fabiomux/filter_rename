@@ -103,12 +103,12 @@ module FilterRename
                                        "Be aware that, for technical reasons, it will start from NUMBER+1,\n" \
                                        "so to have 0 for the first element just set NUMBER to -1",
                                  default: "0" },
-                targets: { args: "FORMAT",
-                           desc: "Print the targets as a *short* one-line or a *long* one-column list.",
-                           long: "This option is to show or not a more compact list of the available\n" \
-                                 "targets for the given files.\n" \
-                                 "The allowed values are *short* or *long*.",
-                           default: "short" },
+                inline_targets: { args: nil,
+                                  desc: "Print the targets' list inline or in a column.",
+                                  long: "This option affects the way the target's list for each file is shown:\n" \
+                                        "a *short* list where the data is in the same line, one for RW targets\n" \
+                                        "and one for RO targets, or a *long* list where the data is in column.",
+                                  default: true },
                 pdf_metadata: { args: nil,
                                 desc: "Create the targets from the PDF files metadata.",
                                 long: "This option enable the generation of targets from the metadata\n" \
@@ -123,7 +123,7 @@ module FilterRename
                                   desc: "Create the targets from the audio files metadata.",
                                   long: "This option enable the generation of targets from the metadata\n" \
                                         "embedded in the supported audio files.",
-                                  default: "true" },
+                                  default: true },
                 mimemagic: { args: nil,
                              desc: "Create the extra targets depending from the file's mimetype.",
                              long: "Disabling it, disable all the extra targets' calculation\n" \
@@ -155,7 +155,7 @@ module FilterRename
       @hash_if_exists = cfg[:hash_if_exists] || true
       @counter_length = cfg[:counter_length] || 3
       @counter_start = cfg[:counter_start] || 0
-      @targets = cfg[:targets].to_sym || :short
+      @inline_targets = cfg[:inline_targets].nil? ? true : cfg[:inline_targets].to_boolean
       @pdf_metadata = cfg[:pdf_metadata].nil? ? true : cfg[:pdf_metadata].to_boolean
       @image_metadata = cfg[:image_metadata].nil? ? true : cfg[:image_metadata].to_boolean
       @audio_metadata = cfg[:audio_metadata].nil? ? true : cfg[:audio_metadata].to_boolean

@@ -112,12 +112,13 @@ module FilterRename
       expand_files!
       raise MissingFiles if @files.empty?
 
+      view = @cfg.global.inline_targets ? :inline_targets : :column_targets
       Messages.label "Targets:"
       @files.each do |src|
         fname = FilenameFactory.create(src, @cfg.global)
 
         Messages.multi fname.full_filename
-        Messages.send(@cfg.global.targets == :short ? :short_targets : :long_targets, fname)
+        Messages.send(view, fname)
       end
     end
 
@@ -125,12 +126,13 @@ module FilterRename
       expand_files!
       raise MissingFiles if @files.empty?
 
+      view = @cfg.global.inline_targets ? :inline_target_values : :column_target_values
       Messages.label "Target values:"
       @files.each do |src|
         fname = FilenameFactory.create(src, @cfg.global)
 
         Messages.multi fname.full_filename
-        Messages.target_values(fname)
+        Messages.send(view, fname)
       end
     end
 

@@ -295,19 +295,26 @@ module FilterRename
            "#{hash_dest.to_s.send(hash_src == hash_dest ? :green : :red)}"
     end
 
-    def self.short_targets(ffilters)
+    def self.inline_targets(ffilters)
       list [ffilters.targets[:readonly].map { |s| "<#{s.to_s.delete("@")}>" }.join(", ")], :red, "-"
       list [ffilters.targets[:writable].map { |s| "<#{s.to_s.delete("@")}>" }.join(", ")], :green, "+"
       puts ""
     end
 
-    def self.long_targets(ffilters)
+    def self.column_targets(ffilters)
       list ffilters.targets[:readonly].map { |s| "<#{s.to_s.delete("@")}>" }, :red, "-"
       list ffilters.targets[:writable].map { |s| "<#{s.to_s.delete("@")}>" }, :green, "+"
       puts ""
     end
 
-    def self.target_values(ffilters)
+    def self.inline_target_values(ffilters)
+      values = ffilters.values
+
+      list [ffilters.targets[:readonly].map { |s| "#{s}: #{values[s]}" }.join(", ")], :red, "-"
+      list [ffilters.targets[:writable].map { |s| "#{s}: #{values[s]}" }.join(", ")], :green, "+"
+    end
+
+    def self.column_target_values(ffilters)
       values = ffilters.values
 
       list ffilters.targets[:readonly].map { |s| "#{s}: #{values[s]}" }, :red, "-"

@@ -6,7 +6,7 @@
   :date_format: '%Y-%m-%d'
   :counter_length: 3
   :counter_start: 0
-  :targets: :short
+  :inline_targets: true
   :pdf_metadata: true
   :image_metadata: true
   :audio_metadata: true
