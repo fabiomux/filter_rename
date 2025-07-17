@@ -21,7 +21,7 @@ module FilterRename
       if (File.read(fname, 3) == "ID3") && (mediatype == "audio")
         require "filter_rename/filetype/mp3_filename"
         res = Mp3Filename.new(fname, cfg)
-      elsif (mediatype == "audio") && (%w[flac mp4 ogg].include? subtype)
+      elsif ((mediatype == "audio") && (subtype == "mp4")) || (%w[flac ogg].include? subtype)
         require "filter_rename/filetype/audio_filename"
         res = AudioFilename.new(fname, cfg)
       elsif (mediatype == "image") && (!["vnd.djvu+multipage"].include? type.split("/")[1])
