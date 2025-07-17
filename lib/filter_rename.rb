@@ -18,8 +18,9 @@ module FilterRename
     def initialize(options)
       @cfg = Config.new(options.global)
       @filters = FilterList.new(options.filters)
-      @files = options.files.to_a
+      @files = options.files
       @show_macro = options.show_macro
+      @help_config = options.help_config
     end
 
     def diff
@@ -153,6 +154,25 @@ module FilterRename
           Messages.item "#{k}: " + v.map { |x| "\"#{x.to_s.green}\"" }.join(", ")
         end
       end
+    end
+
+    def help_config
+      name = @help_config.downcase.gsub(/-/, "_").gsub(/^--/, "")
+
+      if name =~ /^g_/
+        name = name.gsub(/^g_/, "")
+        @help_config = GlobalConfig::OPTIONS[name.to_sym]
+      elsif @help_config =~ /^f_/
+        name = name.gsub(/^f_/, "")
+        @help_config = FilterConfig::OPTIONS[name.to_sym]
+      elsif FilterConfig::OPTIONS.key?(name.to_sym)
+        @help_config = FilterConfig::OPTIONS[name.to_sym]
+      elsif GlobalConfig::OPTIONS.key?(name.to_sym)
+        @help_config = GlobalConfig::OPTIONS[name.to_sym]
+      else
+        raise InvalidOption, name
+      end
+      Messages.help_option name, @help_config
     end
 
     private

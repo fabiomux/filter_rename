@@ -11,12 +11,13 @@ module FilterRename
   #
   class OptParseMain
     def self.parse(_args)
-      options = Struct.new(:filters, :files, :global, :operation, :show_macro).new
+      options = Struct.new(:filters, :files, :global, :operation, :show_macro, :help_config).new
       options.filters = []
       options.files = []
       options.global = {}
       options.operation = :diff
       options.show_macro = ""
+      options.help_config = ""
 
       opt_parser = OptionParser.new do |opt|
         opt.banner = "Usage: filter_rename [-g OPTION1[,OPTION2...]] [FILTER1[,FILTER2...]] <file1>" \
@@ -149,23 +150,8 @@ module FilterRename
 
         opt.on_tail("--help-config [G-OPTION|F-OPTION]", String,
                     "Extended description for the available options") do |o|
-          name = o.downcase.gsub(/-/, "_").gsub(/^--/, "")
-
-          if name =~ /^g_/
-            name = name.gsub(/^g_/, "")
-            o = GlobalConfig::OPTIONS[name.to_sym]
-          elsif o =~ /^f_/
-            name = name.gsub(/^f_/, "")
-            o = FilterConfig::OPTIONS[name.to_sym]
-          elsif FilterConfig::OPTIONS.key?(name.to_sym)
-            o = FilterConfig::OPTIONS[name.to_sym]
-          elsif GlobalConfig::OPTIONS.key?(name.to_sym)
-            o = GlobalConfig::OPTIONS[name.to_sym]
-          else
-            raise InvalidOption, name
-          end
-          Messages.help_option(name, o)
-          exit
+          options.operation = :help_config
+          options.help_config = o
         end
 
         opt.on_tail("-v", "--version", "Show version") do
