@@ -296,7 +296,7 @@ module FilterRename
 
     class CopyTo < FilterRegExp
       def self.hint
-        "Copy the text selected by REGEX to TARGET or TARGET_#"
+        "Copy the text selected by REGEX to TARGET"
       end
 
       def self.params
@@ -540,7 +540,7 @@ module FilterRename
 
     class MoveTo < FilterRegExp
       def self.hint
-        "Move the text selected by REGEX to TARGET or TARGET_#"
+        "Move the text selected by REGEX to TARGET"
       end
 
       def self.params
