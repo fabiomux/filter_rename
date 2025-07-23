@@ -295,6 +295,14 @@ module FilterRename
            "#{hash_dest.to_s.send(hash_src == hash_dest ? :green : :red)}"
     end
 
+    def self.renaming_summary(renamed, skipped, errors)
+      puts ""
+      puts "=" * 40
+      Messages.ok("Renamed: #{renamed}")
+      Messages.warning("Unchanged: #{skipped}")
+      Messages.error("Errors: #{errors}")
+    end
+
     def self.inline_targets(ffilters)
       list [ffilters.targets[:readonly].map { |s| "<#{s.to_s.delete("@")}>" }.join(", ")], :red, "-"
       list [ffilters.targets[:writable].map { |s| "<#{s.to_s.delete("@")}>" }.join(", ")], :green, "+"

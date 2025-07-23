@@ -42,6 +42,9 @@ module FilterRename
       raise MissingFiles if @files.empty?
 
       @filters.expand_macros!(@cfg.macro)
+      renamed = 0
+      skipped = 0
+      errors = 0
 
       Messages.label "Apply:"
       @files.each do |src|
@@ -53,17 +56,21 @@ module FilterRename
           if old_data[:full_filename]
             Messages.renamed!(old_data, fp.dest)
             Messages.changed_tags(fp, old_data, header: false) if fp.source.class.writable_tags?
+            renamed += 1
           elsif fp.source.class.writable_tags?
             Messages.changed_tags(fp, old_data)
+            renamed += 1
           else
             Messages.file_exists(fp)
             Messages.file_hash(fp, @cfg.global.hash_type) if @cfg.global.hash_if_exists
+            errors += 1
           end
-
         else
           Messages.skipping(fp)
+          skipped += 1
         end
       end
+      Messages.renaming_summary(renamed, skipped, errors)
     end
 
     def globals
@@ -87,6 +94,9 @@ module FilterRename
 
       @filters.expand_macros!(@cfg.macro)
       cache = {}
+      renamed = 0
+      skipped = 0
+      errors = 0
 
       Messages.label "Dry Run:"
       @files.each do |src|
@@ -94,19 +104,23 @@ module FilterRename
 
         if fp.unchanged?
           Messages.skipping(fp)
+          skipped += 1
         elsif cache.keys.include?(fp.dest.full_filename) || fp.dest.exists?
           if fp.source.full_filename == fp.dest.full_filename
             Messages.changed_tags(fp)
           else
             Messages.file_exists(fp)
             Messages.file_hash(fp, @cfg.global.hash_type, cache[fp.dest.full_filename]) if @cfg.global.hash_if_exists
+            errors += 1
           end
         else
           Messages.renamed(fp)
           Messages.changed_tags(fp, {}, header: false) if fp.source.class.writable_tags?
           cache[fp.dest.full_filename] = fp.dest
+          renamed += 1
         end
       end
+      Messages.renaming_summary(renamed, skipped, errors)
     end
 
     def targets
