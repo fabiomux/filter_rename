@@ -171,7 +171,7 @@ module FilterRename
     end
 
     def help_config
-      name = @help_config.downcase.gsub(/-/, "_").gsub(/^--/, "")
+      name = @help_config.downcase.gsub("-", "_").gsub(/^--/, "")
 
       if name =~ /^g_/
         name = name.gsub(/^g_/, "")

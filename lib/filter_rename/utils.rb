@@ -150,9 +150,11 @@ module FilterRename
       split(/(?<!\\),/).map { |x| x.gsub('\,', ",") }
     end
 
+    # rubocop:disable Naming/PredicateMethod
     def to_boolean
       %w[1 true].include? downcase
     end
+    # rubocop:enable Naming/PredicateMethod
 
     def to_filter
       Object.const_get("FilterRename::Filters::#{to_s.split(/_|-/).map(&:capitalize).join}")
@@ -352,7 +354,7 @@ module FilterRename
     def self.help_option(name, data)
       puts "OPTION:\n  #{name}"
       puts "\nDEFAULT VALUE:\n  #{data[:default] == " " ? "(SPACE)" : data[:default]}"
-      puts "\nDESCRIPTION:\n#{data[:long].split(/\n/).map { |l| "  #{l}" }.join("\n")}"
+      puts "\nDESCRIPTION:\n#{data[:long].split("\n").map { |l| "  #{l}" }.join("\n")}"
       puts ""
     end
   end
@@ -362,7 +364,7 @@ module FilterRename
   #
   class IndexOutOfRange < StandardError
     def initialize(values)
-      super "Invalid index '#{values[0]}' out of the range 1..#{values[1]}, -#{values[1]}..-1"
+      super("Invalid index '#{values[0]}' out of the range 1..#{values[1]}, -#{values[1]}..-1")
     end
   end
 
@@ -371,7 +373,7 @@ module FilterRename
   #
   class UnknownHashCode < StandardError
     def initialize(hash_type)
-      super "Invalid hash type: #{hash_type}"
+      super("Invalid hash type: #{hash_type}")
     end
   end
 
@@ -380,7 +382,7 @@ module FilterRename
   #
   class InvalidOption < StandardError
     def initialize(option)
-      super "The option #{option} doesn't exist"
+      super("The option #{option} doesn't exist")
     end
   end
 
@@ -389,7 +391,7 @@ module FilterRename
   #
   class InvalidMacro < StandardError
     def initialize(macro)
-      super "Invalid macro: #{macro}"
+      super("Invalid macro: #{macro}")
     end
   end
 
@@ -398,7 +400,7 @@ module FilterRename
   #
   class InvalidTarget < StandardError
     def initialize(target)
-      super "Invalid target: #{target}"
+      super("Invalid target: #{target}")
     end
   end
 
@@ -407,7 +409,7 @@ module FilterRename
   #
   class InvalidFilterSetting < StandardError
     def initialize(name)
-      super "Invalid configuration setting: #{name}"
+      super("Invalid configuration setting: #{name}")
     end
   end
 
@@ -416,7 +418,7 @@ module FilterRename
   #
   class InvalidWordsGroup < StandardError
     def initialize(group)
-      super "Invalid words group: #{group}"
+      super("Invalid words group: #{group}")
     end
   end
 
@@ -425,7 +427,7 @@ module FilterRename
   #
   class InvalidWordsSection < StandardError
     def initialize(group, section)
-      super "Invalid words section for #{group}: #{section}"
+      super("Invalid words section for #{group}: #{section}")
     end
   end
 
@@ -434,7 +436,7 @@ module FilterRename
   #
   class InvalidWordsIndex < StandardError
     def initialize(group, section, idx)
-      super "Missing the item #{idx + 1} in #{group}/#{section} words section"
+      super("Missing the item #{idx + 1} in #{group}/#{section} words section")
     end
   end
 
@@ -443,7 +445,7 @@ module FilterRename
   #
   class FileNotFound < StandardError
     def initialize(filename)
-      super "File not found: #{filename}"
+      super("File not found: #{filename}")
     end
   end
 
@@ -452,7 +454,7 @@ module FilterRename
   #
   class MissingFiles < StandardError
     def initialize
-      super "No filenames specified"
+      super("No filenames specified")
     end
   end
 
@@ -461,7 +463,7 @@ module FilterRename
   #
   class ExistingFile < StandardError
     def initialize(filename)
-      super "The file #{filename} already exists and won't be overwrite"
+      super("The file #{filename} already exists and won't be overwrite")
     end
   end
 
@@ -470,7 +472,7 @@ module FilterRename
   #
   class Interruption < StandardError
     def initialize
-      super "Ok ok... Exiting!"
+      super("Ok ok... Exiting!")
     end
   end
 

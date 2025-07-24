@@ -9,7 +9,7 @@ module FilterRename
   #
   class ImageFilename < Filename
     def initialize(fname, cfg)
-      super fname, cfg
+      super
 
       image = FastImage.new(fname)
       @width = image.size[0].to_s

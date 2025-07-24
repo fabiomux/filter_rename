@@ -12,7 +12,7 @@ module FilterRename
     end
 
     def initialize(fname, cfg)
-      super fname, cfg
+      super
 
       load_audio_data(fname) if cfg.audio_metadata
     end
@@ -25,7 +25,7 @@ module FilterRename
     end
 
     def rename!(dest)
-      old_data = super dest
+      old_data = super
 
       TagLib::FileRef.open(full_filename) do |audio|
         old_data.merge!({ title: audio.tag.title, artist: audio.tag.artist, album: audio.tag.album,
@@ -49,7 +49,7 @@ module FilterRename
     end
 
     def diff(dest)
-      super(dest) + "
+      super + "
        Title:    #{Differ.diff_by_word(dest.get_string(:title).to_s, @title.to_s)}
        Artist:   #{Differ.diff_by_word(dest.get_string(:artist).to_s, @artist.to_s)}
        Album:    #{Differ.diff_by_word(dest.get_string(:album).to_s, @album.to_s)}

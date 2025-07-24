@@ -87,11 +87,11 @@ module FilterRename
 
         GlobalConfig::OPTIONS.each do |k, v|
           if v[:args].nil?
-            opt.on("--[no-]g-#{k.to_s.gsub(/_/, "-")}", v[:desc]) do |c|
+            opt.on("--[no-]g-#{k.to_s.gsub("_", "-")}", v[:desc]) do |c|
               options.global.store(k, c)
             end
           else
-            opt.on("--g-#{k.to_s.gsub(/_/, "-")} #{v[:args]}", String, v[:desc]) do |c|
+            opt.on("--g-#{k.to_s.gsub("_", "-")} #{v[:args]}", String, v[:desc]) do |c|
               options.global.store(k, c)
             end
           end
@@ -104,11 +104,11 @@ module FilterRename
           klass = Object.const_get("FilterRename::Filters::Config")
 
           if v[:args].nil?
-            opt.on("--[no-]f-#{k.to_s.gsub(/_/, "-")}", v[:desc]) do |c|
+            opt.on("--[no-]f-#{k.to_s.gsub("_", "-")}", v[:desc]) do |c|
               options.filters << { klass => ["#{k}:#{c}"] }
             end
           else
-            opt.on("--f-#{k.to_s.gsub(/_/, "-")} #{v[:args]}", String, v[:desc]) do |c|
+            opt.on("--f-#{k.to_s.gsub("_", "-")} #{v[:args]}", String, v[:desc]) do |c|
               options.filters << { klass => ["#{k}:#{c}"] }
             end
           end

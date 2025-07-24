@@ -54,7 +54,7 @@ module FilterRename
     end
 
     def target?(target)
-      instance_variables.include?("@#{target}".to_sym)
+      instance_variables.include?(:"@#{target}")
     end
 
     def exists?
@@ -109,11 +109,11 @@ module FilterRename
     end
 
     def writable?(tag)
-      instance_variable_get("@#{tag}".to_sym).writable?
+      instance_variable_get(:"@#{tag}").writable?
     end
 
     def custom?(tag)
-      instance_variable_get("@#{tag}".to_sym).custom?
+      instance_variable_get(:"@#{tag}").custom?
     end
 
     def values

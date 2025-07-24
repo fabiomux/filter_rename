@@ -74,7 +74,7 @@ module FilterRename
       end
 
       def filter(params)
-        super "#{get_string}#{params[0]}"
+        super("#{get_string}#{params[0]}")
       end
     end
 
@@ -88,7 +88,7 @@ module FilterRename
       end
 
       def filter(params)
-        super "#{get_string}#{get_string(params[0])}"
+        super("#{get_string}#{get_string(params[0])}")
       end
     end
 
@@ -104,7 +104,7 @@ module FilterRename
       def filter(params)
         ws = get_config(:word_separator)
         set_string(get_string(params[1]).to_s.split(ws).push(params[0]).join(ws), params[1])
-        super get_string
+        super(get_string)
       end
     end
 
@@ -119,7 +119,7 @@ module FilterRename
 
       def filter(params)
         set_string(get_string(params[1]).to_s + params[0], params[1])
-        super get_string
+        super(get_string)
       end
     end
 
@@ -224,7 +224,7 @@ module FilterRename
 
       def filter(_params)
         ws = get_config(:word_separator)
-        super get_string.split(ws).map(&:capitalize).join(ws)
+        super(get_string.split(ws).map(&:capitalize).join(ws))
       end
     end
 
@@ -252,7 +252,7 @@ module FilterRename
       end
 
       def filter(params)
-        super get_string(params[0]).to_s
+        super(get_string(params[0]).to_s)
       end
     end
 
@@ -506,7 +506,7 @@ module FilterRename
       end
 
       def filter(params)
-        super get_string.ljust(params[0].to_i, params[1])
+        super(get_string.ljust(params[0].to_i, params[1]))
       end
     end
 
@@ -520,7 +520,7 @@ module FilterRename
       end
 
       def filter(_params)
-        super get_string.downcase
+        super(get_string.downcase)
       end
     end
 
@@ -667,7 +667,7 @@ module FilterRename
       end
 
       def filter(params)
-        super "#{params[0]}#{get_string}"
+        super("#{params[0]}#{get_string}")
       end
     end
 
@@ -681,7 +681,7 @@ module FilterRename
       end
 
       def filter(params)
-        super "#{get_string(params[0])}#{get_string}"
+        super("#{get_string(params[0])}#{get_string}")
       end
     end
 
@@ -817,11 +817,11 @@ module FilterRename
 
       def filter(params)
         params[2] ||= get_config(:lang)
-        super get_string.change_date_format(format_src: params[0], format_dest: params[1],
+        super(get_string.change_date_format(format_src: params[0], format_dest: params[1],
                                             long_months: get_words(:long_months, params[2]),
                                             short_months: get_words(:short_months, params[2]),
                                             long_days: get_words(:long_days, params[2]),
-                                            short_days: get_words(:short_days, params[2]))
+                                            short_days: get_words(:short_days, params[2])))
       end
     end
 
@@ -835,7 +835,7 @@ module FilterRename
       end
 
       def filter(_params)
-        super get_string.reverse
+        super(get_string.reverse)
       end
     end
 
@@ -849,7 +849,7 @@ module FilterRename
       end
 
       def filter(params)
-        super get_string.rjust(params[0].to_i, params[1])
+        super(get_string.rjust(params[0].to_i, params[1]))
       end
     end
 
@@ -870,7 +870,7 @@ module FilterRename
           str = get_string
         end
 
-        super str
+        super(str)
       end
     end
 
@@ -886,7 +886,7 @@ module FilterRename
       def filter(params)
         target = params[-1] if params.length.odd?
         set_string(params[1], target) if get_string =~ Regexp.new(params[0], get_config(:ignore_case).to_boolean)
-        super get_string
+        super(get_string)
       end
     end
 
@@ -901,7 +901,7 @@ module FilterRename
 
       def filter(params)
         regexp = Regexp.new(params.join("|"), get_config(:ignore_case).to_boolean)
-        super get_string.gsub(regexp, " ")
+        super(get_string.gsub(regexp, " "))
       end
     end
 
@@ -929,7 +929,7 @@ module FilterRename
       end
 
       def filter(params)
-        super get_string.gsub Regexp.new("#{params[0]}{2,}", get_config(:ignore_case).to_boolean), params[0]
+        super(get_string.gsub Regexp.new("#{params[0]}{2,}", get_config(:ignore_case).to_boolean), params[0])
       end
     end
 
@@ -1003,7 +1003,7 @@ module FilterRename
       end
 
       def filter(params)
-        super params[0].gsub(/<([a-z0-9_]+)>/) { get_string(Regexp.last_match[1]) }
+        super(params[0].gsub(/<([a-z0-9_]+)>/) { get_string(Regexp.last_match[1]) })
       end
     end
 
@@ -1026,7 +1026,7 @@ module FilterRename
           str = str.gsub(Regexp.new(x, get_config(:ignore_case)), get_words(group, lang_dest, i))
         end
 
-        super str
+        super(str)
       end
     end
 
@@ -1040,7 +1040,7 @@ module FilterRename
       end
 
       def filter(_params)
-        super get_string.strip
+        super(get_string.strip)
       end
     end
 
@@ -1054,7 +1054,7 @@ module FilterRename
       end
 
       def filter(_params)
-        super get_string.upcase
+        super(get_string.upcase)
       end
     end
 

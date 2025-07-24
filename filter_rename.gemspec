@@ -31,15 +31,11 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 2.0"
-  spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
-
-  spec.add_runtime_dependency "differ"
-  spec.add_runtime_dependency "exiv2"
-  spec.add_runtime_dependency "fastimage"
-  spec.add_runtime_dependency "mimemagic"
-  spec.add_runtime_dependency "mp3info"
-  spec.add_runtime_dependency "pdf-reader"
-  spec.add_runtime_dependency "taglib-ruby"
+  spec.add_dependency "differ"
+  spec.add_dependency "exiv2"
+  spec.add_dependency "fastimage"
+  spec.add_dependency "mimemagic"
+  spec.add_dependency "mp3info"
+  spec.add_dependency "pdf-reader"
+  spec.add_dependency "taglib-ruby", "~> 1.0"
 end

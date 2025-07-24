@@ -14,7 +14,7 @@ module FilterRename
     end
 
     def get_macro(name)
-      macro = instance_variable_get("@#{name.to_s.gsub(/[^a-zA-Z0-9,-_]/, "")}")
+      macro = instance_variable_get("@#{name.to_s.gsub(/[^a-zA-Z0-9,\-_]/, "")}")
       raise InvalidMacro, name if macro.nil? || macro.to_s.empty?
 
       macro
@@ -148,9 +148,10 @@ module FilterRename
 
     attr_reader(*OPTIONS.keys)
 
+    # rubocop:disable Style/RedundantCondition
     def initialize(cfg)
       @date_format = cfg[:date_format] || "%Y-%m-%d"
-      @hash_type = cfg[:hash_type].to_sym || :md5
+      @hash_type = cfg[:hash_type].nil? ? :md5 : cfg[:hash_type].to_sym
       @hash_on_tags = cfg[:hash_on_tags] || false
       @hash_if_exists = cfg[:hash_if_exists] || true
       @counter_length = cfg[:counter_length] || 3
@@ -163,6 +164,7 @@ module FilterRename
       @essential_tags = cfg[:essential_tags].nil? ? false : cfg[:essential_tags].to_boolean
       @check_source = cfg[:check_source].nil? ? true : cfg[:check_source].to_boolean
     end
+    # rubocop:enable Style/RedundantCondition
   end
 
   #
@@ -239,12 +241,13 @@ module FilterRename
 
     attr_accessor(*OPTIONS.keys)
 
+    # rubocop:disable Style/RedundantCondition
     def initialize(cfg)
       @word_separator = cfg[:word_separator] || " "
       @number_separator = cfg[:number_separator] || "."
       # Unused property
       @occurrence_separator = cfg[:occurrence_separator] || "-"
-      @target = cfg[:target].to_sym || :name
+      @target = cfg[:target].nil? ? :name : cfg[:target].to_sym
       @ignore_case = cfg[:ignore_case].nil? ? true : cfg[:ignore_case].to_boolean
       @lang = (cfg[:lang] || :en).to_sym
       @macro = cfg[:macro] || {}
@@ -253,6 +256,7 @@ module FilterRename
       @grep_exclude = cfg[:grep_exclude].nil? ? false : cfg[:grep_exclude].to_boolean
       @grep_target = (cfg[:grep_target] || :full_filename).to_sym
     end
+    # rubocop:enable Style/RedundantCondition
   end
 
   #

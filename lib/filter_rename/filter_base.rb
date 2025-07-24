@@ -42,7 +42,7 @@ module FilterRename
   #
   class FilterBase < SimpleDelegator
     def initialize(obj, options)
-      super obj
+      super(obj)
       @dest = obj # useful for macros
       @cfg = options[:cfg]
       @words = options[:words]
@@ -53,13 +53,13 @@ module FilterRename
     end
 
     def set_config(name, value)
-      raise InvalidFilterSetting, name unless @cfg.instance_variables.include?("@#{name}".to_sym)
+      raise InvalidFilterSetting, name unless @cfg.instance_variables.include?(:"@#{name}")
 
       @cfg.instance_variable_set "@#{name}", value
     end
 
     def get_config(name)
-      raise InvalidFilterSetting, name unless @cfg.instance_variables.include?("@#{name}".to_sym)
+      raise InvalidFilterSetting, name unless @cfg.instance_variables.include?(:"@#{name}")
 
       @cfg.instance_variable_get "@#{name}"
     end
@@ -72,17 +72,17 @@ module FilterRename
       return if value.nil?
 
       if target.nil?
-        super @cfg.target, value
+        super(@cfg.target, value)
       else
-        super target, value
+        super(target, value)
       end
     end
 
     def get_string(target = nil)
       if target.nil?
-        super @cfg.target
+        super(@cfg.target)
       else
-        super target
+        super
       end
     end
 
@@ -156,9 +156,9 @@ module FilterRename
       res = loop_items
 
       if self_targeted?
-        super get_string
+        super(get_string)
       else
-        super res
+        super(res)
       end
     end
   end
@@ -227,7 +227,7 @@ module FilterRename
   #
   class FilterRegExp < FilterBase
     def filter(params)
-      super loop_regex(get_string, params)
+      super(loop_regex(get_string, params))
     end
 
     private

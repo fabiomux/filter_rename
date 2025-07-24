@@ -8,7 +8,7 @@ module FilterRename
   #
   class PdfFilename < Filename
     def initialize(fname, cfg)
-      super fname, cfg
+      super
 
       load_pdf_data(fname) if cfg.pdf_metadata
     end
