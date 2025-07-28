@@ -33,7 +33,9 @@ Metrics/ClassLength:
   Enabled: true
   Exclude:
   - './lib/**/cli.rb'
+  - './lib/**/config.rb'
   - './lib/**/filename.rb'
+  - './lib/**/filter_rename.rb'
   - './lib/**/utils.rb'
 
 Metrics/BlockLength:
