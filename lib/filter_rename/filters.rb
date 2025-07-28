@@ -637,8 +637,15 @@ module FilterRename
         params[-1] == current_target
       end
 
-      def filtered_word(word, _param_num)
-        set_string(word, params[1])
+      def filtered_word(word, param_num)
+        case param_num
+        when params_expanded.length
+          @word = [@word, word].join(ws).strip
+          set_string(@word, params[1])
+        else
+          @word = [@word, word].join(ws)
+        end
+
         nil
       end
     end

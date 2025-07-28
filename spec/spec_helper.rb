@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "bundler/setup"
-require "filter_rename"
+require_relative "../lib/filter_rename"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
