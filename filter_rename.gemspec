@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
                        "to perform over sections of the full filename logically represented in targets."
   spec.homepage      = "https://github.com/fabiomux/filter_rename"
   spec.license       = "GPL-3.0"
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 2.5.0"
 
   spec.metadata = {
     "bug_tracker_uri" => "https://github.com/fabiomux/filter_rename/issues",
