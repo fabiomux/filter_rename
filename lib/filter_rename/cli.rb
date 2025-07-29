@@ -82,6 +82,18 @@ module FilterRename
           options.global.store(:check_source, false)
         end
 
+        opt.on("-X", "--exclude-files PATTERN", String, "Exclude the files matching the PATTERN") do |c|
+          klass = Object.const_get("FilterRename::Filters::Config")
+          options.filters << { klass => ["grep:#{c}"] }
+          options.filters << { klass => ["grep_exclude:true"] }
+        end
+
+        opt.on("-O", "--only-files PATTERN", String, "Select only the files matching the PATTERN") do |c|
+          klass = Object.const_get("FilterRename::Filters::Config")
+          options.filters << { klass => ["grep:#{c}"] }
+          options.filters << { klass => ["grep_exclude:false"] }
+        end
+
         opt.separator ""
         opt.separator "Global options extended:"
 
