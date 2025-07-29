@@ -70,13 +70,14 @@ module FilterRename
         opt.separator ""
         opt.separator "Options:"
 
-        opt.on("--global OPTION:VALUE[,OPTION:VALUE]", 'Override global options with: "option:value"') do |v|
+        opt.on("-G", "--global OPTION:VALUE[,OPTION:VALUE]", String,
+               'Override global options with: "option:value"') do |v|
           v.parametrize.each do |idx|
             options.global.store(idx.split(":")[0].to_sym, idx.split(":")[1])
           end
         end
 
-        opt.on("--virtual", "Accept a list of file not present in the local drives") do |_c|
+        opt.on("-V", "--virtual", "Accept a list of file not present in the local drives") do |_c|
           options.global.store(:mimemagic, false)
           options.global.store(:essential_tags, true)
           options.global.store(:check_source, false)
@@ -92,6 +93,10 @@ module FilterRename
           klass = Object.const_get("FilterRename::Filters::Config")
           options.filters << { klass => ["grep:#{c}"] }
           options.filters << { klass => ["grep_exclude:false"] }
+        end
+
+        opt.on("-M", "--macro MACRO1,[MACRO2,...]", Array, "Apply the MACRO") do |v|
+          options.filters << MacroConfig.create(v)
         end
 
         opt.separator ""
@@ -129,10 +134,6 @@ module FilterRename
         opt.separator ""
         opt.separator "Filters:"
 
-        opt.on("--macro MACRO1,[MACRO2,...]", Array, "Apply the MACRO") do |v|
-          options.filters << MacroConfig.create(v)
-        end
-
         Filters.constants.sort.each do |c|
           switch = c.to_s.to_switch
           klass = Object.const_get("FilterRename::Filters::#{c}")
@@ -160,7 +161,7 @@ module FilterRename
           exit
         end
 
-        opt.on_tail("--help-config [G-OPTION|F-OPTION]", String,
+        opt.on_tail("-H", "--help-config [G-OPTION|F-OPTION]", String,
                     "Extended description for the available options") do |o|
           options.operation = :help_config
           options.help_config = o
