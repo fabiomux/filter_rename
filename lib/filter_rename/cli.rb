@@ -68,7 +68,8 @@ module FilterRename
         end
 
         opt.separator ""
-        opt.separator "Options:"
+        opt.separator "Global options:"
+        opt.separator ""
 
         opt.on("-G", "--global OPTION:VALUE[,OPTION:VALUE]", String,
                'Override global options with: "option:value"') do |v|
@@ -77,11 +78,31 @@ module FilterRename
           end
         end
 
+        opt.separator ""
+
         opt.on("-V", "--virtual", "Accept a list of file not present in the local drives") do |_c|
           options.global.store(:mimemagic, false)
           options.global.store(:essential_tags, true)
           options.global.store(:check_source, false)
         end
+
+        opt.separator ""
+
+        GlobalConfig::OPTIONS.each do |k, v|
+          if v[:args].nil?
+            opt.on("--[no-]g-#{k.to_s.gsub("_", "-")}", v[:desc]) do |c|
+              options.global.store(k, c)
+            end
+          else
+            opt.on("--g-#{k.to_s.gsub("_", "-")} #{v[:args]}", String, v[:desc]) do |c|
+              options.global.store(k, c)
+            end
+          end
+        end
+
+        opt.separator ""
+        opt.separator "Filter options:"
+        opt.separator ""
 
         opt.on("-X", "--exclude-files PATTERN", String, "Exclude the files matching the PATTERN") do |c|
           klass = Object.const_get("FilterRename::Filters::Config")
@@ -100,22 +121,6 @@ module FilterRename
         end
 
         opt.separator ""
-        opt.separator "Global options extended:"
-
-        GlobalConfig::OPTIONS.each do |k, v|
-          if v[:args].nil?
-            opt.on("--[no-]g-#{k.to_s.gsub("_", "-")}", v[:desc]) do |c|
-              options.global.store(k, c)
-            end
-          else
-            opt.on("--g-#{k.to_s.gsub("_", "-")} #{v[:args]}", String, v[:desc]) do |c|
-              options.global.store(k, c)
-            end
-          end
-        end
-
-        opt.separator ""
-        opt.separator "Filter options extended:"
 
         FilterConfig::OPTIONS.each do |k, v|
           klass = Object.const_get("FilterRename::Filters::Config")
