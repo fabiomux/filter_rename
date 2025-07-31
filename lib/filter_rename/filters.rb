@@ -331,7 +331,7 @@ module FilterRename
         when 1
           @word = word
         when params_expanded.length
-          word = [@word, word].join(ws)
+          word = [word, @word].join(ws)
         else
           @word = [@word, word].join(ws)
         end
@@ -614,7 +614,7 @@ module FilterRename
           @word = word
           res = nil
         when params_expanded.length
-          res = [@word, word].join(ws)
+          res = [word, @word].join(ws)
         else
           @word = [@word, word].join(ws)
           res = nil
