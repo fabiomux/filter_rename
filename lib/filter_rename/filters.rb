@@ -56,7 +56,7 @@ module FilterRename
       end
 
       def self.params
-        "NTH;TARGET"
+        "NTH,TARGET"
       end
 
       def filtered_number(num, _param_num)
@@ -878,6 +878,24 @@ module FilterRename
         end
 
         super(str)
+      end
+    end
+
+    class SetNumberWhen < FilterNumber
+      def self.hint
+        "Set the NTH number to NUMBER when CONDITION is matched"
+      end
+
+      def self.params
+        "NTH,CONDITION,NUMBER"
+      end
+
+      def filtered_number(num, _param_num)
+        if FilterNumber.calculator(num.to_i, params[-2])
+          FilterNumber.calculator(num.to_i, params[-1])
+        else
+          num
+        end
       end
     end
 

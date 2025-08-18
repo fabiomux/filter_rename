@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "differ"
   spec.add_dependency "exiv2"
   spec.add_dependency "fastimage"
+  spec.add_dependency "keisan"
   spec.add_dependency "mimemagic"
   spec.add_dependency "mp3info"
   spec.add_dependency "pdf-reader"

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "delegate"
+require "keisan"
 
 module FilterRename
   #
@@ -197,6 +198,22 @@ module FilterRename
   #
   class FilterNumber < FilterBase
     include IndexedParams
+
+    def self.calculator(num, expr)
+      @@calc ||= Keisan::Calculator.new
+      begin
+        @@calc.evaluate("gt()")
+      rescue StandardError
+        @@calc.define_function!(:gt, ->(x) { num > x })
+        @@calc.define_function!(:lt, ->(x) { num < x })
+        @@calc.define_function!(:gte, ->(x) { num >= x })
+        @@calc.define_function!(:lte, ->(x) { num <= x })
+        @@calc.define_function!(:inc, ->(x) { num + x })
+        @@calc.define_function!(:mult, ->(x) { num * x })
+      end
+
+      @@calc.evaluate(expr)
+    end
 
     private
 
