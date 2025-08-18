@@ -74,7 +74,7 @@ module FilterRename
       @genre_s = mp3info.tag.genre_s.to_s
 
       # read only stuff
-      @vbr = (mp3info.tag.vbr ? "vbr" : "")
+      @vbr = (mp3info.tag.vbr ? "vbr" : "").dup
       @samplerate = mp3info.samplerate.to_s
       @bitrate = mp3info.bitrate.to_s
 
