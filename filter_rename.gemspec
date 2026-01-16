@@ -38,5 +38,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "mimemagic"
   spec.add_dependency "mp3info"
   spec.add_dependency "pdf-reader"
-  spec.add_dependency "taglib-ruby", "~> 1.0"
+  spec.add_dependency "taglib-ruby" #, "~> 1.0"
 end
